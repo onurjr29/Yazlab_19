@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Login from './pages/auth/login'
+import Anasayfa from './pages/anasayfa'
+import AdminRoute from './routes/AdminRoute'
+import Dashboard from './pages/yonetimPaneli/dashboard'
+import AdminLayout from './pages/yonetimPaneli/AdminLayout'
+import AdminUsers from './pages/yonetimPaneli/users/page'
+import JuriOnay from './pages/yonetimPaneli/juriOnay/page'
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Routes>
+        <Route path='/auth/login' element={<Login/>}/>
+        <Route path='/anasayfa' element={<Anasayfa/>}/>
+        {/* <Route path='/auth/register' element={<Register/>}/> */}
+
+        <Route path='/yonetim-paneli' element={<AdminRoute/>}>
+          <Route element={<AdminLayout/>}>
+            <Route index element={<Dashboard/>}/>
+            <Route path='dashboard' element={<Dashboard/>}/>
+            <Route path='users' element={<AdminUsers/>}/>
+            <Route path='juri-onay' element={<JuriOnay/>}/>
+          </Route>
+        </Route>
+      </Routes>
+    </Router>
+  )
 }
 
-export default App;
+export default App
