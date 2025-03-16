@@ -9,7 +9,7 @@ const AdminLayout = () => {
         <div className="flex flex-col items-start gap-y-4">
           <h2 className="text-lg font-semibold">Admin Panel</h2>
           <Link to='/yonetim-paneli/dashboard' className="p-2 hover:underline bg-black rounded-lg text-white w-full text-sm">Dashboard</Link >
-          <Link to='/yonetim-paneli/users' className="p-2 hover:underline bg-black rounded-lg text-white w-full text-sm">Kullanici Yonetimi</Link >
+          <Link to='/yonetim-paneli/users' className="p-2 hover:underline bg-black roundisaed-lg text-white w-full text-sm">Kullanici Yonetimi</Link >
           <Link to='/yonetim-paneli/juri-onay' className="p-2 hover:underline bg-black rounded-lg text-white w-full text-sm">Jüri Onay</Link >
           <Link to='/yonetim-paneli/dashboard' className="p-2 hover:underline bg-black rounded-lg text-white w-full text-sm">Dashboard</Link >
 
