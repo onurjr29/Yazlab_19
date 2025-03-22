@@ -9,7 +9,7 @@ const Login = ({ setUser }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if(token) navigate('/anasayfa');
+        if(token) navigate('/');
     }, [navigate]);
 
     const handleSubmit = async (e) => {
@@ -19,7 +19,7 @@ const Login = ({ setUser }) => {
             localStorage.setItem('token', res.data.token);
             setUser(res.data);
             alert('Giriş başarılı!');
-            navigate('/anasayfa');
+            navigate('/');
         } catch (error) {
             console.error(error);
             alert('Giriş başarısız!');
