@@ -7,9 +7,10 @@ import Dashboard from './pages/yonetimPaneli/page'
 import AdminLayout from './pages/yonetimPaneli/AdminLayout'
 import AdminUsers from './pages/yonetimPaneli/users/page'
 import JuriOnay from './pages/yonetimPaneli/juriOnay/page'
-import IlanDetayPage from './pages/IlanDetay/page'
+import IlanDetayPage from './pages/IlanDetay/page.tsx'
+
 import Layout from './pages/Layout'
-import "./index.css";
+import Ilanlar from './pages/yonetimPaneli/ilanlar/page'
 
 const App = () => {
   return (
@@ -17,10 +18,8 @@ const App = () => {
       <Routes>
         <Route path='/auth/login' element={<Login/>}/>
         <Route element={<Layout/>}>
-          <Route path='/' element={<Login/>}/>
-          <Route path='/Register' element={<Register/>}/>
-          <Route path='/AnaSayfa' element={<Anasayfa/>}/>
-          <Route path='/ilan-detay' element={<IlanDetayPage/>}/>
+          <Route path='/' element={<Anasayfa/>}/>
+          <Route path='/ilan-detay/:id' element={<IlanDetayPage/>}/>
         </Route>
         {/* <Route path='/auth/register' element={<Register/>}/> */}
 
@@ -30,6 +29,7 @@ const App = () => {
             <Route path='dashboard' element={<Dashboard/>}/>
             <Route path='users' element={<AdminUsers/>}/>
             <Route path='juri-onay' element={<JuriOnay/>}/>
+            <Route path='ilan-duzenle' element={<Ilanlar/>}/>
           </Route>
         </Route>
       </Routes>
