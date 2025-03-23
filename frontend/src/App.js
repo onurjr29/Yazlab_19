@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Login from './pages/auth/login'
-import Anasayfa from './pages/page'
+import Register from './pages/auth/register'
+ import Anasayfa from './pages/page'
 import AdminRoute from './routes/AdminRoute'
 import Dashboard from './pages/yonetimPaneli/page'
 import AdminLayout from './pages/yonetimPaneli/AdminLayout'
