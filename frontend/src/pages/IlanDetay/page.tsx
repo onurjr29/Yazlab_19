@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import kouLogo from '../../../public/images/kou-logo.png';
 
 interface Ilan {
   _id: string;
@@ -28,18 +29,24 @@ interface CategoryItem {
   value: number;
 }
 
+interface DecodedToken {
+  user_id: string;
+  // varsa başka bilgiler: email, role vs.
+}
+
 export default function IlanDetayPage() {
   const { id } = useParams();
   const [ilan, setIlan] = useState<Ilan | null>(null);
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [eklenenBelgeler, setEklenenBelgeler] = useState<any[]>([]);
+  const [ozgecmis, setOzgecmis] = useState<File | null>(null);
   const [belgeInput, setBelgeInput] = useState<{
     kategori: string;
-    kisiSayisi: string;
+    kisiSayisi: number;
     belge: File | null;
   }>({
     kategori: '',
-    kisiSayisi: '',
+    kisiSayisi: 1,
     belge: null
   });
   
@@ -52,6 +59,28 @@ export default function IlanDetayPage() {
   });
   const [basvuruSuccess, setBasvuruSuccess] = useState('');
   const [basvuruError, setBasvuruError] = useState('');
+  const [user, setUser] = useState<any>(null);
+
+
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("token"); // veya cookie'den al
+      if (!token) return;
+
+      const decoded: DecodedToken = jwt_decode(token);
+      const userId = decoded.user_id;
+
+      const res = await fetch(`http://localhost:5000/api/users/${userId}`);
+      const data = await res.json();
+      setUser(data);
+    } catch (err) {
+      console.error("Kullanıcı bilgisi alınamadı:", err);
+    }
+  };
+
+  fetchUser();
+}, []);
 
   useEffect(() => {
     const fetchIlan = async () => {
@@ -79,21 +108,47 @@ export default function IlanDetayPage() {
   }, [id]);
 
   const handleBelgeEkle = () => {
-    if (!belgeInput.kategori || !belgeInput.kisiSayisi || !belgeInput.belge) return;
-    setEklenenBelgeler([...eklenenBelgeler, belgeInput]);
-    setBelgeInput({ kategori: '', kisiSayisi: '', belge: null });
+    if (!belgeInput.kategori || !belgeInput.belge) return;
+
+    const isA1ToA8 = /^A\.[1-8]$/.test(belgeInput.kategori);
+
+    if (isA1ToA8 && !belgeInput.kisiSayisi) {
+      alert("A.1 - A.8 arası için kişi sayısı zorunludur!");
+      return;
+    }
+
+    const kisiSayisi = isA1ToA8 ? belgeInput.kisiSayisi : '1';
+
+    setEklenenBelgeler([...eklenenBelgeler, { ...belgeInput, kisiSayisi }]);
+    setBelgeInput({ kategori: '', kisiSayisi: 1, belge: null });
   };
 
   const handleBasvuru = async () => {
+    const formData = new FormData();
+    formData.append('ilan_id', id || '');
+    formData.append('user_id', '60f1f1b3b3b3b3b3b3b3b3b3');
+    formData.append('name', basvuruData.name);
+    formData.append('surname', basvuruData.surname);
+    formData.append('email', basvuruData.email);
+    formData.append('phone', basvuruData.phone);
+    formData.append('message', basvuruData.message);
+
+    formData.append('belgeler_meta', JSON.stringify(
+      eklenenBelgeler.map(b => ({ kategori: b.kategori, kisiSayisi: b.kisiSayisi }))
+    ));
+
+    if (ozgecmis) {
+      formData.append('ozgecmis', ozgecmis);
+    }
+
+    eklenenBelgeler.forEach((b) => {
+      if (b.belge) formData.append('belgeler[]', b.belge); // <--- Burası değişti!
+    });
+    
     try {
       const response = await fetch(`http://localhost:5000/api/basvurular`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ilan_id: id,
-          ...basvuruData,
-          belgeler: eklenenBelgeler,
-        })
+        body: formData
       });
 
       if (!response.ok) {
@@ -105,6 +160,7 @@ export default function IlanDetayPage() {
       setBasvuruError('');
       setBasvuruData({ name: '', surname: '', email: '', phone: '', message: '' });
       setEklenenBelgeler([]);
+      setOzgecmis(null);
     } catch (error: any) {
       setBasvuruError(error.message);
       setBasvuruSuccess('');
@@ -118,7 +174,9 @@ export default function IlanDetayPage() {
       <div className="grid grid-cols-2 gap-x-6">
         <div className="w-full bg-white rounded-[20px] flex flex-col gap-y-4 p-6 shadow-md">
           <h1 className="text-black text-lg font-semibold">İlan Detay</h1>
-          <div className="border-2 border-solid border-red-500 h-[400px]"></div>
+          <div className="border-2 border-solid border-black rounded-[20px] overflow-hidden h-[400px] relative flex justify-center">
+          <img src="/images/kou-logo.png" alt={ilan.baslik} className="h-full object-cover object-center" />
+          </div>
           <div className="flex flex-col gap-y-2">
             <h2 className="text-lg font-semibold">{ilan.baslik}</h2>
             <p className="text-sm">{ilan.aciklama}</p>
@@ -159,7 +217,7 @@ export default function IlanDetayPage() {
               </div>
               <div className="grid col-span-2">
                 <label>Özgeçmiş</label>
-                <input type="file" placeholder='CV'/>
+                <input type="file" onChange={(e) => setOzgecmis(e.target.files?.[0] || null)} />
               </div>
             </div>
 
@@ -175,7 +233,15 @@ export default function IlanDetayPage() {
                     </option>
                   ))}
                 </select>
-                <input type="number" placeholder="Yazar Sayısı" className="border p-2 rounded-lg" value={belgeInput.kisiSayisi} onChange={(e) => setBelgeInput({ ...belgeInput, kisiSayisi: e.target.value })} />
+                {/^A\.[1-8]$/.test(belgeInput.kategori) && (
+                <input
+                    type="number"
+                    placeholder="Yazar Sayısı"
+                    className="border p-2 rounded-lg"
+                    value={belgeInput.kisiSayisi}
+                    onChange={(e) => setBelgeInput({ ...belgeInput, kisiSayisi: parseInt(e.target.value) })}
+                  />
+                )}
                 <input type="file" onChange={(e) => setBelgeInput({ ...belgeInput, belge: e.target.files?.[0] || null })} />
               </div>
               <button onClick={handleBelgeEkle} className="w-fit mt-2 bg-blue-600 text-white px-4 py-1 rounded">+ Ekle</button>
@@ -197,3 +263,7 @@ export default function IlanDetayPage() {
     </div>
   );
 }
+function jwt_decode(token: string): DecodedToken {
+  throw new Error('Function not implemented.');
+}
+

@@ -16,8 +16,9 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/auth/login' element={<Login/>}/>
-        <Route element={<Layout/>}>
+      <Route path='/auth/login' element={<Login/>}/>
+      <Route path='/auth/register' element={<Register/>}/>
+      <Route element={<Layout/>}>
           <Route path='/' element={<Anasayfa/>}/>
           <Route path='/ilan-detay/:id' element={<IlanDetayPage/>}/>
         </Route>
