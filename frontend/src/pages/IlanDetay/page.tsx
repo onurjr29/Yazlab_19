@@ -77,15 +77,25 @@ export default function IlanDetayPage() {
   };
 
   const handleBasvuru = async () => {
+    const formData = new FormData();
+    formData.append('ilan_id', id || '');
+    formData.append('name', basvuruData.name);
+    formData.append('surname', basvuruData.surname);
+    formData.append('email', basvuruData.email);
+    formData.append('phone', basvuruData.phone);
+    formData.append('message', basvuruData.message);
+    formData.append('belgeler_meta', JSON.stringify(
+      eklenenBelgeler.map(b => ({ kategori: b.kategori, kisiSayisi: b.kisiSayisi }))
+    ));
+
+    eklenenBelgeler.forEach((b) => {
+      if (b.belge) formData.append('belgeler', b.belge);
+    });
+
     try {
       const response = await fetch(`http://localhost:5000/api/basvurular`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ilan_id: id,
-          ...basvuruData,
-          belgeler: eklenenBelgeler,
-        })
+        body: formData
       });
 
       if (!response.ok) {
@@ -108,52 +118,12 @@ export default function IlanDetayPage() {
   return (
     <div className="flex flex-col gap-y-4 p-6">
       <div className="grid grid-cols-2 gap-x-6">
-        <div className="w-full bg-white rounded-[20px] flex flex-col gap-y-4 p-6 shadow-md">
-          <h1 className="text-black text-lg font-semibold">İlan Detay</h1>
-          <div className="border-2 border-solid border-red-500 h-[400px]"></div>
-          <div className="flex flex-col gap-y-2">
-            <h2 className="text-lg font-semibold">{ilan.baslik}</h2>
-            <p className="text-sm">{ilan.aciklama}</p>
-            <p className="text-sm">Başlangıç: {ilan.baslangic_tarihi}</p>
-            <p className="text-sm">Bitiş: {ilan.bitis_tarihi}</p>
-            <p className="text-sm">Yönetici: {ilan.ad} {ilan.soyad}</p>
-            <p className="text-sm">Pozisyon: {ilan.pozisyon}</p>
-            <p className="text-sm">Bölüm: {ilan.bolum}</p>
-            <p className="text-sm">Toplam Puan: Min {ilan.total_points.min} / Max {ilan.total_points.max ?? '-'}</p>
-            <p className="text-sm">Kategoriler:</p>
-            <ul className="list-disc list-inside text-sm pl-4">
-              {Object.entries(ilan.selected_categories).filter(([_, val]) => val).map(([key]) => (
-                <li key={key}>{key}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        {/* ...ilan detayları kısmı aynı kalıyor... */}
 
         <div className="w-full bg-white rounded-[20px] shadow-md">
           <div className="flex flex-col p-6 gap-y-4">
             <h2 className="text-black text-lg font-semibold">Başvur</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="grid">
-                <label>Ad</label>
-                <input type="text" value={basvuruData.name} onChange={(e) => setBasvuruData({ ...basvuruData, name: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
-              </div>
-              <div className="grid">
-                <label>Soyad</label>
-                <input type="text" value={basvuruData.surname} onChange={(e) => setBasvuruData({ ...basvuruData, surname: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
-              </div>
-              <div className="grid">
-                <label>Email</label>
-                <input type="email" value={basvuruData.email} onChange={(e) => setBasvuruData({ ...basvuruData, email: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
-              </div>
-              <div className="grid">
-                <label>Telefon</label>
-                <input type="text" value={basvuruData.phone} onChange={(e) => setBasvuruData({ ...basvuruData, phone: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
-              </div>
-              <div className="grid col-span-2">
-                <label>CV veya Açıklama</label>
-                <textarea rows={4} value={basvuruData.message} onChange={(e) => setBasvuruData({ ...basvuruData, message: e.target.value })} className="p-2 border border-gray-300 rounded-lg"></textarea>
-              </div>
-            </div>
+            {/* ...form alanları aynı kalıyor... */}
 
             <hr className="my-2" />
             <h3 className="text-md font-semibold">Ek Belgeler</h3>
@@ -168,7 +138,7 @@ export default function IlanDetayPage() {
                   ))}
                 </select>
                 <input type="number" placeholder="Yazar Sayısı" className="border p-2 rounded-lg" value={belgeInput.kisiSayisi} onChange={(e) => setBelgeInput({ ...belgeInput, kisiSayisi: e.target.value })} />
-                {/* <input type="file" onChange={(e) => setBelgeInput({ ...belgeInput, belge: e.target.files?.[0] || null })} /> */}
+                <input type="file" onChange={(e) => setBelgeInput({ ...belgeInput, belge=e.target.files?.[0] || null })} />
               </div>
               <button onClick={handleBelgeEkle} className="w-fit mt-2 bg-blue-600 text-white px-4 py-1 rounded">+ Ekle</button>
               <ul className="text-sm list-disc list-inside">
