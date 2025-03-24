@@ -15,11 +15,10 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/auth/login' element={<Login/>}/>
-        <Route element={<Layout/>}>
-          <Route path='/' element={<Login/>}/>
-          <Route path='/Register' element={<Register/>}/>
-          <Route path='/AnaSayfa' element={<Anasayfa/>}/>
+         <Route element={<Layout/>}>
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/register' element={<Register/>}/>
+          <Route path='/anaSayfa' element={<Anasayfa/>}/>
           <Route path='/ilan-detay' element={<IlanDetayPage/>}/>
         </Route>
         {/* <Route path='/auth/register' element={<Register/>}/> */}

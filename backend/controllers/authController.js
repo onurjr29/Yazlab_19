@@ -1,30 +1,48 @@
+// backend/controllers/authController.js
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 
 exports.register = async (req, res) => {
-    try {
-        const {tcKimlik, email, password} = req.body;
-        const user = await User.findOne({email});
-        
-        // tc kimlik kontrolu gelecek e devlet apisi ile yapilacak
-        if(user) return res.status(400).json({message: 'Bu e-posta adresi zaten kayıtlı'});
-        const newUser = await User.create({tcKimlik, email, password});
-        res.status(201).json({message: 'Kayıt başarılı'});
-    }catch (error) {
-        res.status(400).json({message: error.message});
+  const { name, email, identityNumber, birthDate, password } = req.body;
+
+  if (!name || !email || !identityNumber || !birthDate || !password) {
+    return res.status(400).json({ message: "Tüm alanlar gereklidir." });
+  }
+
+  if (!/^\d{11}$/.test(identityNumber)) {
+    return res.status(400).json({ message: "TC Kimlik Numarası 11 haneli olmalıdır." });
+  }
+
+  try {
+    const existingUser = await User.findOne({ $or: [{ email }, { identityNumber }] });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "Bu e-posta veya TC zaten kayıtlı." });
     }
+
+    const newUser = new User({
+      name,
+      email,
+      identityNumber,
+      birthDate: new Date(birthDate),
+      password
+    });
+
+    await newUser.save();
+
+    return res.status(201).json({ message: "Kayıt başarılı." });
+  } catch (error) {
+  console.error("Register Error:", {
+    message: error.message,
+    stack: error.stack,
+    full: error
+  });
+  return res.status(500).json({ message: "Sunucu hatası.", error: error.message });
 }
 
-exports.login = async (req, res) => {
-    try{
-        const {email, password} = req.body;
-        const user = await User.findOne({email});
-        if(!user || !await bcrypt.compare(password, user.password)) return res.status(400).json({message: 'Geçersiz e-posta adresi veya şifre'});
+};
 
-        const token = jwt.sign({id: user._id, role: user.role}, process.env.JWT_SECRET, {expiresIn: '7d'});
-        res.status(200).json({token});
-    } catch (error) {
-        res.status(400).json({message: error.message});
-    }
-}
+// Şimdilik login boş
+exports.login = (req, res) => {
+  res.send("login placeholder");
+};
