@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import kouLogo from '../../../public/images/kou-logo.png';
+import { jwtDecode } from "jwt-decode";
 
 interface Ilan {
   _id: string;
@@ -29,9 +29,17 @@ interface CategoryItem {
   value: number;
 }
 
+interface User {
+  _id: string;
+  name: string;
+  surname: string;
+  email: string;
+  phone: string;
+  tcKimlikNo: string;
+}
+
 interface DecodedToken {
-  user_id: string;
-  // varsa başka bilgiler: email, role vs.
+  id: string;
 }
 
 export default function IlanDetayPage() {
@@ -49,6 +57,7 @@ export default function IlanDetayPage() {
     kisiSayisi: 1,
     belge: null
   });
+  // if (!token) return <Navigate to="/login" />;
   
   const [basvuruData, setBasvuruData] = useState({
     name: '',
@@ -59,29 +68,41 @@ export default function IlanDetayPage() {
   });
   const [basvuruSuccess, setBasvuruSuccess] = useState('');
   const [basvuruError, setBasvuruError] = useState('');
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User>();
 
 
-useEffect(() => {
-  const fetchUser = async () => {
-    try {
-      const token = localStorage.getItem("token"); // veya cookie'den al
-      if (!token) return;
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+  
+        const decoded: DecodedToken = jwtDecode(token);
+        const userId = decoded.id;
+  
+        const res = await fetch(`http://localhost:5000/api/users/${userId}`);
+        const data = await res.json();
+        setUser({...data, _id: userId}); // sadece burada
+      } catch (err) {
+        console.error("Kullanıcı bilgisi alınamadı:", err);
+      }
+    };
+  
+    fetchUser();
+  }, []);
 
-      const decoded: DecodedToken = jwt_decode(token);
-      const userId = decoded.user_id;
-
-      const res = await fetch(`http://localhost:5000/api/users/${userId}`);
-      const data = await res.json();
-      setUser(data);
-    } catch (err) {
-      console.error("Kullanıcı bilgisi alınamadı:", err);
+  useEffect(() => {
+    if (user) {
+      setBasvuruData(prev => ({
+        ...prev,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        phone: user.phone,
+      }));
     }
-  };
-
-  fetchUser();
-}, []);
-
+  }, [user]);
+    
   useEffect(() => {
     const fetchIlan = async () => {
       try {
@@ -126,7 +147,7 @@ useEffect(() => {
   const handleBasvuru = async () => {
     const formData = new FormData();
     formData.append('ilan_id', id || '');
-    formData.append('user_id', '60f1f1b3b3b3b3b3b3b3b3b3');
+    formData.append('user_id', user?._id || '');
     formData.append('name', basvuruData.name);
     formData.append('surname', basvuruData.surname);
     formData.append('email', basvuruData.email);
@@ -201,19 +222,19 @@ useEffect(() => {
             <div className="grid grid-cols-2 gap-6">
               <div className="grid">
                 <label>Ad</label>
-                <input type="text" value={basvuruData.name} onChange={(e) => setBasvuruData({ ...basvuruData, name: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
+                <input type="text" disabled value={user?.name} className="p-2 border border-gray-300 rounded-lg" />
               </div>
               <div className="grid">
                 <label>Soyad</label>
-                <input type="text" value={basvuruData.surname} onChange={(e) => setBasvuruData({ ...basvuruData, surname: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
+                <input type="text" disabled value={user?.surname} className="p-2 border border-gray-300 rounded-lg" />
               </div>
               <div className="grid">
                 <label>Email</label>
-                <input type="email" value={basvuruData.email} onChange={(e) => setBasvuruData({ ...basvuruData, email: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
+                <input type="email" value={user?.email} onChange={(e) => setBasvuruData({ ...basvuruData, email: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
               </div>
               <div className="grid">
                 <label>Telefon</label>
-                <input type="text" value={basvuruData.phone} onChange={(e) => setBasvuruData({ ...basvuruData, phone: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
+                <input type="text" value={user?.phone} onChange={(e) => setBasvuruData({ ...basvuruData, phone: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
               </div>
               <div className="grid col-span-2">
                 <label>Özgeçmiş</label>
