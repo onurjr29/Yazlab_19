@@ -1,25 +1,70 @@
+// frontend/pages/Register.js
 import React, { useState } from "react";
-import { Lock, User, Mail } from "lucide-react";
+import { Lock, User, Mail, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [identityNumber, setIdentityNumber] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [tcWarning, setTcWarning] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!name || !email || !password || !confirmPassword) {
+
+    if (!name || !email || !identityNumber || !birthDate || !password || !confirmPassword) {
       setError("Lütfen tüm alanları doldurunuz.");
       return;
     }
+
+    if (!/^\d{11}$/.test(identityNumber)) {
+      setError("TC Kimlik Numarası 11 haneli ve sadece rakamlardan oluşmalıdır.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Şifreler uyuşmuyor.");
       return;
     }
-    setError("");
-    console.log("Kayıt başarılı!", { name, email, password });
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
+        name,
+        email,
+        identityNumber,
+        birthDate,
+        password
+      });
+
+      alert("Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz.");
+      setError("");
+      navigate("/login");
+    } catch (err) {
+      const msg = err.response?.data?.message || "Kayıt sırasında bir hata oluştu.";
+      setError(msg);
+    }
+  };
+
+  const handleIdentityChange = (e) => {
+    const input = e.target.value.replace(/\D/g, "");
+    if (input.length <= 11) {
+      setIdentityNumber(input);
+    }
+  };
+
+  const handleTcBlur = () => {
+    if (identityNumber.length > 0 && identityNumber.length < 11) {
+      setTcWarning("TC Kimlik numaranızı tam yazınız.");
+    } else {
+      setTcWarning("");
+    }
   };
 
   return (
@@ -29,70 +74,57 @@ export default function Register() {
           <img src="/logo.png" alt="Kocaeli Üniversitesi" className="h-16" />
         </div>
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
-          Kocaeli Üniversitesi <br /> Akademik Personel Kayıt
+          Kocaeli Üniversitesi <br /> Akademik Personel Kayıt Sistemi
         </h2>
+
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Ad Soyad Girişi */}
           <div className="relative">
             <User className="absolute left-4 top-3 text-gray-500" size={20} />
-            <input
-              type="text"
-              placeholder="Ad Soyad"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500"
-            />
+            <input type="text" placeholder="Ad Soyad" value={name} onChange={(e) => setName(e.target.value)} className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
           </div>
 
-          {/* E-posta Girişi */}
           <div className="relative">
             <Mail className="absolute left-4 top-3 text-gray-500" size={20} />
-            <input
-              type="email"
-              placeholder="Kurumsal E-posta"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500"
-            />
+            <input type="email" placeholder="E-posta" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
           </div>
 
-          {/* Şifre Girişi */}
+          <div className="relative">
+            <input type="text" placeholder="TC Kimlik Numarası" value={identityNumber} onChange={handleIdentityChange} onBlur={handleTcBlur} className="pl-4 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+          </div>
+          {tcWarning && <p className="text-red-500 text-sm mt-[-16px]">{tcWarning}</p>}
+
+          <div className="relative">
+            <input type="date" placeholder="Doğum Tarihi" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="pl-4 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+          </div>
+
           <div className="relative">
             <Lock className="absolute left-4 top-3 text-gray-500" size={20} />
-            <input
-              type="password"
-              placeholder="Şifre"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500"
-            />
+            <input type={showPassword ? "text" : "password"} placeholder="Şifre" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-12 pr-10 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-3 text-gray-500">
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
-          {/* Şifre Tekrar Girişi */}
           <div className="relative">
             <Lock className="absolute left-4 top-3 text-gray-500" size={20} />
-            <input
-              type="password"
-              placeholder="Şifre Tekrar"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500"
-            />
+            <input type={showConfirmPassword ? "text" : "password"} placeholder="Şifre Tekrar" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="pl-12 pr-10 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-3 text-gray-500">
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
-          {/* Kayıt Butonu */}
           <button type="submit" className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-300">
             Kayıt Ol
           </button>
         </form>
 
-        {/* Giriş Sayfasına Yönlendirme */}
         <p className="text-center text-sm text-gray-600 mt-5">
           Zaten bir hesabınız var mı?{" "}
-          <a href="#" className="text-green-500 hover:underline">
+          <Link to="/login" className="text-green-500 hover:underline">
             Giriş yap
-          </a>
+          </Link>
         </p>
       </div>
     </div>
