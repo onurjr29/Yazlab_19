@@ -36,7 +36,7 @@ export default function Anasayfa() {
           <Link to={`/ilan-detay/${ilan._id}`} key={ilan._id} className=''>
             <div className='border-2 flex bg-white rounded-[20px] overflow-hidden gap-4'>
               <div className='flex justify-center w-[300px] aspect-[1/1] items-center border border-gray-300 p-4'>
-                📄
+                <img src="/images/kou-logo.png" alt={ilan.baslik} className="h-full object-cover object-center" />
               </div>
               <div className='flex flex-col gap-y-2 p-2'>
                 <h2 className='text-lg font-semibold'>{ilan.baslik}</h2>

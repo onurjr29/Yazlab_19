@@ -22,7 +22,7 @@ const ApplicationSchema = new mongoose.Schema({
   email: String,
   phone: String,
   message: String,
-  belgeler: [BelgeSchema],
+  belgeler: [{ belgeIsim: String, belgeIcerik: BelgeSchema }],
   createdAt: {
     type: Date,
     default: Date.now

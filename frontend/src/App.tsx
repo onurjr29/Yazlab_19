@@ -7,17 +7,27 @@ import Dashboard from './pages/yonetimPaneli/page'
 import AdminLayout from './pages/yonetimPaneli/AdminLayout'
 import AdminUsers from './pages/yonetimPaneli/users/page'
 import JuriOnay from './pages/yonetimPaneli/juriOnay/page'
-import IlanDetayPage from './pages/IlanDetay/page.tsx'
-
+import IlanDetayPage from './pages/IlanDetay/page'
 import Layout from './pages/Layout'
 import Ilanlar from './pages/yonetimPaneli/ilanlar/page'
+import { useState } from 'react'
+
+interface UserType {
+  token: string;
+  id: string;
+  role: string;
+}
+
 
 const App = () => {
+  const [user, setUser] = useState<UserType | null>(null);
+  
   return (
     <Router>
       <Routes>
-        <Route path='/auth/login' element={<Login/>}/>
-        <Route element={<Layout/>}>
+      <Route path='/auth/login' element={<Login setUser={setUser}/>}/>
+      <Route path='/auth/register' element={<Register/>}/>
+      <Route element={<Layout/>}>
           <Route path='/' element={<Anasayfa/>}/>
           <Route path='/ilan-detay/:id' element={<IlanDetayPage/>}/>
         </Route>

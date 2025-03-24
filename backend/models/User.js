@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
     tcKimlikNo: { type: String, required: true }, // Adayın TC kimlik numarası
     name: { type: String, required: true }, // Adayın adı
+    surname: { type: String, required: true }, // Adayın soyadı
     email: { type: String, required: true, unique: true }, // E-posta
     password: { type: String, required: true }, // Şifre (hashed olarak saklanmalı)
     role: { type: String, enum: ["applicant", "admin"], default: "applicant" }, // Kullanıcı rolü

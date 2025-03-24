@@ -15,10 +15,11 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/requirements', require('./routes/academicRequirementsRoutes'));	
 app.use('/api/ilanlar', require('./routes/ilanlarRoutes'));
-app.use('/api/basvuru', require('./routes/basvuruRoutes'));
+app.use('/api/basvurular', require('./routes/basvuruRoutes'));
 app.use('/api/categories', require('./routes/categoryRoutes'));
 
 const PORT = process.env.PORT || 5000;

@@ -7,5 +7,6 @@ export const register = async (userData) => {
 }
 
 export const login = async (userData) => {
+    console.log('userData', userData);
     return await axios.post(`${API_URL}login`, userData);
 }
