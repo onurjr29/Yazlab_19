@@ -35,7 +35,7 @@ interface User {
   surname: string;
   email: string;
   phone: string;
-  tcKimlikNo: string;
+  identityNumber: string;
 }
 
 interface DecodedToken {

@@ -1,4 +1,3 @@
-// frontend/pages/Register.js
 import React, { useState } from "react";
 import { Lock, User, Mail, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,6 +5,7 @@ import axios from "axios";
 
 export default function Register() {
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState(""); // ✅ Soyad alanı eklendi
   const [email, setEmail] = useState("");
   const [identityNumber, setIdentityNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -15,11 +15,12 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [tcWarning, setTcWarning] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name || !email || !identityNumber || !birthDate || !password || !confirmPassword) {
+    if (!name || !surname || !email || !identityNumber || !birthDate || !password || !confirmPassword) {
       setError("Lütfen tüm alanları doldurunuz.");
       return;
     }
@@ -37,6 +38,7 @@ export default function Register() {
     try {
       const res = await axios.post("http://localhost:5000/api/auth/register", {
         name,
+        surname,  
         email,
         identityNumber,
         birthDate,
@@ -46,13 +48,13 @@ export default function Register() {
       alert("Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz.");
       setError("");
       navigate("/login");
-    } catch (err) {
+    } catch (err: any) {
       const msg = err.response?.data?.message || "Kayıt sırasında bir hata oluştu.";
       setError(msg);
     }
   };
 
-  const handleIdentityChange = (e) => {
+  const handleIdentityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.replace(/\D/g, "");
     if (input.length <= 11) {
       setIdentityNumber(input);
@@ -82,7 +84,12 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="relative">
             <User className="absolute left-4 top-3 text-gray-500" size={20} />
-            <input type="text" placeholder="Ad Soyad" value={name} onChange={(e) => setName(e.target.value)} className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+            <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+          </div>
+
+          <div className="relative">
+            <User className="absolute left-4 top-3 text-gray-500" size={20} />
+            <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
           </div>
 
           <div className="relative">

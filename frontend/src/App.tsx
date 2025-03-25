@@ -25,12 +25,12 @@ const App = () => {
   return (
     <Router>
       <Routes>
+      <Route element={<Layout/>}>
+      <Route path='/' element={<Anasayfa/>}/>
       <Route path='/auth/login' element={<Login setUser={setUser}/>}/>
       <Route path='/auth/register' element={<Register/>}/>
-      <Route element={<Layout/>}>
-          <Route path='/' element={<Anasayfa/>}/>
-          <Route path='/ilan-detay/:id' element={<IlanDetayPage/>}/>
-        </Route>
+      <Route path='/ilan-detay/:id' element={<IlanDetayPage/>}/>
+    </Route>
         {/* <Route path='/auth/register' element={<Register/>}/> */}
 
         <Route path='/yonetim-paneli' element={<AdminRoute/>}>
