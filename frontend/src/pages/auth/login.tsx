@@ -4,46 +4,46 @@ import { Lock, User } from 'lucide-react';
 import axios from 'axios';
 
 interface UserType {
-    token: string;
-    id: string;
-    role: string;
-  }
- 
+  token: string;
+  id: string;
+  role: string;
+  name: string;
+  surname: string;
+  email: string;
+}
+
 interface LoginProps {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 
 const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    // if (token) navigate('/');
+    if (token) navigate('/');
   }, [navigate]);
 
-//   Eksik olan login fonksiyonu eklendi
   const login = async ({ email, password }: LoginProps) => {
-    console.log({ email, password });
-    return await axios.post('http://localhost:5000/api/auth/login', {
-      email,
-      password,
-    });
+    return await axios.post('http://localhost:5000/api/auth/login', { email, password });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await login({ email, password });
-      localStorage.setItem('token', res.data.token);
-      setUser(res.data);
+      const { token, user } = res.data;
+
+      localStorage.setItem('token', token);
+      setUser({ token, ...user });
       alert('Giriş başarılı!');
       navigate('/');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert('Giriş başarısız!');
+      alert(error.response?.data?.message || 'Giriş başarısız!');
     }
   };
 
@@ -57,7 +57,6 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
           Kocaeli Üniversitesi <br /> Akademik Personel Girişi
         </h2>
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* E-posta */}
           <div className="relative">
             <User className="absolute left-4 top-3 text-gray-500" size={20} />
             <input
@@ -70,7 +69,6 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
             />
           </div>
 
-          {/* Şifre */}
           <div className="relative">
             <Lock className="absolute left-4 top-3 text-gray-500" size={20} />
             <input
@@ -83,7 +81,6 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
             />
           </div>
 
-          {/* Giriş Butonu */}
           <button
             type="submit"
             className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-300"

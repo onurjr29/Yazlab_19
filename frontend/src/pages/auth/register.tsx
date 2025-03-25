@@ -47,7 +47,7 @@ export default function Register() {
 
       alert("Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz.");
       setError("");
-      navigate("/login");
+      navigate("/auth/login");
     } catch (err: any) {
       const msg = err.response?.data?.message || "Kayıt sırasında bir hata oluştu.";
       setError(msg);
