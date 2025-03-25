@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface Ilan {
   _id: string;
@@ -13,6 +13,7 @@ interface Ilan {
 
 export default function Anasayfa() {
   const [ilanlar, setIlanlar] = useState<Ilan[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchIlanlar = async () => {
@@ -28,9 +29,27 @@ export default function Anasayfa() {
     fetchIlanlar();
   }, []);
 
+  const handleLogout = () => {
+    // Eğer kullanıcı bilgisi localStorage’da tutuluyorsa onu da silebilirsin
+    // localStorage.removeItem('user');
+    // Veya sadece state üzerinden çalışıyorsan başka bir şey yapmana gerek yok
+
+    navigate('/auth/login'); // login sayfasına yönlendir
+    window.location.reload(); // App içinde user null olacağı için otomatik yönlendir
+  };
+
   return (
     <div className="p-4">
-      <h1 className="text-black text-2xl mb-4">Akademik İlanlar</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-black text-2xl">Akademik İlanlar</h1>
+        <button 
+          onClick={handleLogout} 
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+        >
+          Çıkış Yap
+        </button>
+      </div>
+
       <div className='flex flex-col gap-y-4'>
         {ilanlar.map((ilan) => (
           <Link to={`/ilan-detay/${ilan._id}`} key={ilan._id} className=''>
