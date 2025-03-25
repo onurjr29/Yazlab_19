@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const IlanSchema = new mongoose.Schema({
   bolum: { type: String, required: true },
   pozisyon: { type: String, required: true },
+  pos_label: { type: String, required: true },
   ad: { type: String, required: true },
   soyad: { type: String, required: true },
   baslik: { type: String, required: true },

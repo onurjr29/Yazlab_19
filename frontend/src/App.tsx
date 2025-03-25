@@ -7,10 +7,12 @@ import Dashboard from './pages/yonetimPaneli/page'
 import AdminLayout from './pages/yonetimPaneli/AdminLayout'
 import AdminUsers from './pages/yonetimPaneli/users/page'
 import JuriOnay from './pages/yonetimPaneli/juriOnay/page'
-import IlanDetayPage from './pages/IlanDetay/page'
+import IlanDetayPage from './pages//IlanDetay/page'
 import Layout from './pages/Layout'
 import Ilanlar from './pages/yonetimPaneli/ilanlar/page'
 import { useState } from 'react'
+import JuriOnayDetay from './pages/yonetimPaneli/juriOnay/[id]'
+import IlanYeni from './pages/yonetimPaneli/ilanlar/yeni/page'
 
 interface UserType {
   token: string;
@@ -38,8 +40,10 @@ const App = () => {
             <Route index element={<Dashboard/>}/>
             <Route path='dashboard' element={<Dashboard/>}/>
             <Route path='users' element={<AdminUsers/>}/>
-            <Route path='juri-onay' element={<JuriOnay/>}/>
+            <Route path='juri-onay/:id' element={<JuriOnayDetay />} /><Route path='juri-onay' element={<JuriOnay/>}/>
             <Route path='ilan-duzenle' element={<Ilanlar/>}/>
+            <Route path='ilanlar/yeni' element={<IlanYeni/>}/>
+            
           </Route>
         </Route>
       </Routes>

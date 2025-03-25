@@ -3,6 +3,8 @@ const router = express.Router();
 const upload = require('../utils/upload');
 const Application = require('../models/Application');
 
+const JuryAssignment = require('../models/JuryAssignment');
+
 router.post(
   '/',
   upload.fields([
@@ -29,7 +31,7 @@ router.post(
       } catch (e) {
         return res.status(400).json({ error: 'belgeler_meta geçersiz formatta JSON olmalı.' });
       }
-      
+
       const belgelerDosyalari = req.files['belgeler'] || req.files['belgeler[]'] || [];
       const ozgecmisDosya = req.files?.ozgecmis?.[0];
 
@@ -55,7 +57,21 @@ router.post(
         });
       }
 
-      // MongoDB’ye kaydet
+      const uygunJuriListesi = await JuryAssignment.find({
+        $expr: { $lt: [{ $size: "$application_ids" }, 5] }
+      });
+
+      if (uygunJuriListesi.length === 0) {
+        return res.status(400).json({ error: "Başvuru atanacak jüri bulunamadı. Maksimum kapasiteye ulaşılmış olabilir." });
+      }
+
+      const randomIndex = Math.floor(Math.random() * uygunJuriListesi.length);
+      const secilenJuri = uygunJuriListesi[randomIndex];
+
+      // Başvuru ID’sini ekle
+     
+
+      // Başvuru kaydedilsin
       const yeniBasvuru = new Application({
         ilan_id,
         user_id,
@@ -64,16 +80,34 @@ router.post(
         email,
         phone,
         message,
-        belgeler
+        belgeler,
+        juri_id: secilenJuri.jury_id
       });
-
+      secilenJuri.application_ids.push(yeniBasvuru._id);
+      await secilenJuri.save();
       await yeniBasvuru.save();
-      res.status(201).json({ message: 'Başvuru başarıyla kaydedildi.' });
+
+      // 🎯 Jüri havuzundan uygun bir jüri seç
+
+      res.status(201).json({ message: 'Başvuru başarıyla kaydedildi ve jüriye atandı.' });
+
     } catch (err) {
       console.error('Başvuru Hatası:', err);
       res.status(500).json({ error: 'Sunucu hatası', detail: err.message });
     }
   }
 );
+
+// routes/applicationRoutes.js
+router.get("/:id", async (req, res) => {
+  try {
+    const app = await Application.findById(req.params.id).populate("ilan_id");
+    if (!app) return res.status(404).json({ message: "Başvuru bulunamadı" });
+    res.json(app);
+  } catch (err) {
+    res.status(500).json({ message: "Sunucu hatası", detail: err.message });
+  }
+});
+
 
 module.exports = router;

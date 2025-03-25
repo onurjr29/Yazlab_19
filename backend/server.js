@@ -15,6 +15,7 @@ app.use('/api/requirements', require('./routes/academicRequirementsRoutes'));
 app.use('/api/ilanlar', require('./routes/ilanlarRoutes'));
 app.use('/api/basvurular', require('./routes/basvuruRoutes'));
 app.use('/api/categories', require('./routes/categoryRoutes'));
+app.use('/api/jury-assignments', require('./routes/juryAssignmentRoutes'));
 
 app.use('/api/auth', authRoutes);
 

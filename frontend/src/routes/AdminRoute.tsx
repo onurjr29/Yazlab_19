@@ -10,15 +10,20 @@ interface DecodedToken {
 
 const AdminRoute = () => {
     const token = localStorage.getItem("token");
-
+  
     if (!token) return <Navigate to="/login" />;
-
+  
     try {
-        const decoded = jwtDecode<DecodedToken>(token); // Token'i çöz
-        return decoded.role === "Admin" ? <Outlet /> : <Navigate to="/" />;
+      const decoded = jwtDecode<DecodedToken>(token); // Token'i çöz
+  
+      if (decoded.role === "admin" || decoded.role === "jury") {
+        return <Outlet />; // sadece alt route'ları göster
+      } else {
+        return <Navigate to="/" />;
+      }
     } catch (error) {
-        return <Navigate to="/login" />;
+      return <Navigate to="/login" />;
     }
-};
-
+  };
+  
 export default AdminRoute;

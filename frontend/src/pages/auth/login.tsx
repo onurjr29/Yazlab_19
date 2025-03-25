@@ -2,6 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User } from 'lucide-react';
 import axios from 'axios';
+import { Navigate, Outlet } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
+
+interface DecodedToken {
+    id: string;
+    role: string;
+    exp: number;
+}
+
 
 interface UserType {
     token: string;
@@ -40,13 +49,21 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
       localStorage.setItem('token', res.data.token);
       setUser(res.data);
       alert('Giriş başarılı!');
-      navigate('/');
+  
+      const decoded = jwtDecode<DecodedToken>(res.data.token);
+      if (decoded.role === 'admin') {
+        navigate('/yonetim-paneli/dashboard');
+      } else if (decoded.role === 'jury') {
+        navigate('/yonetim-paneli/juri-onay');
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       console.error(error);
       alert('Giriş başarısız!');
     }
   };
-
+  
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r p-6">
       <div className="w-full max-w-md p-8 shadow-2xl rounded-2xl bg-white">

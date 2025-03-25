@@ -1,31 +1,33 @@
 // frontend/pages/Register.js
 import React, { useState } from "react";
-import { Lock, User, Mail, Eye, EyeOff } from "lucide-react";
+import { Lock, User, Mail, Eye, EyeOff, Phone } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Register() {
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
-  const [identityNumber, setIdentityNumber] = useState("");
-  const [birthDate, setBirthDate] = useState("");
+  const [tcKimlikNo, setTcKimlikNo] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [tcWarning, setTcWarning] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name || !email || !identityNumber || !birthDate || !password || !confirmPassword) {
+    if (!name || !surname || !email || !tcKimlikNo || !password || !confirmPassword) {
       setError("Lütfen tüm alanları doldurunuz.");
       return;
     }
 
-    if (!/^\d{11}$/.test(identityNumber)) {
-      setError("TC Kimlik Numarası 11 haneli ve sadece rakamlardan oluşmalıdır.");
+    if (!/^[0-9]{11}$/.test(tcKimlikNo)) {
+      setError("TC Kimlik Numarası 11 haneli olmalıdır.");
       return;
     }
 
@@ -37,33 +39,18 @@ export default function Register() {
     try {
       const res = await axios.post("http://localhost:5000/api/auth/register", {
         name,
+        surname,
         email,
-        identityNumber,
-        birthDate,
+        tcKimlikNo,
+        phone,
         password
       });
 
       alert("Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz.");
-      setError("");
-      navigate("/login");
-    } catch (err) {
+      navigate("/auth/login");
+    } catch (err: any) {
       const msg = err.response?.data?.message || "Kayıt sırasında bir hata oluştu.";
       setError(msg);
-    }
-  };
-
-  const handleIdentityChange = (e) => {
-    const input = e.target.value.replace(/\D/g, "");
-    if (input.length <= 11) {
-      setIdentityNumber(input);
-    }
-  };
-
-  const handleTcBlur = () => {
-    if (identityNumber.length > 0 && identityNumber.length < 11) {
-      setTcWarning("TC Kimlik numaranızı tam yazınız.");
-    } else {
-      setTcWarning("");
     }
   };
 
@@ -82,7 +69,12 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="relative">
             <User className="absolute left-4 top-3 text-gray-500" size={20} />
-            <input type="text" placeholder="Ad Soyad" value={name} onChange={(e) => setName(e.target.value)} className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+            <input type="text" placeholder="Ad" value={name} onChange={(e) => setName(e.target.value)} className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+          </div>
+
+          <div className="relative">
+            <User className="absolute left-4 top-3 text-gray-500" size={20} />
+            <input type="text" placeholder="Soyad" value={surname} onChange={(e) => setSurname(e.target.value)} className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
           </div>
 
           <div className="relative">
@@ -91,12 +83,12 @@ export default function Register() {
           </div>
 
           <div className="relative">
-            <input type="text" placeholder="TC Kimlik Numarası" value={identityNumber} onChange={handleIdentityChange} onBlur={handleTcBlur} className="pl-4 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+            <input type="text" placeholder="TC Kimlik Numarası" value={tcKimlikNo} onChange={(e) => setTcKimlikNo(e.target.value)} className="pl-4 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
           </div>
-          {tcWarning && <p className="text-red-500 text-sm mt-[-16px]">{tcWarning}</p>}
 
           <div className="relative">
-            <input type="date" placeholder="Doğum Tarihi" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="pl-4 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
+            <Phone className="absolute left-4 top-3 text-gray-500" size={20} />
+            <input type="text" placeholder="Telefon (opsiyonel)" value={phone} onChange={(e) => setPhone(e.target.value)} className="pl-12 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
           </div>
 
           <div className="relative">
@@ -121,7 +113,7 @@ export default function Register() {
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-5">
-          Zaten bir hesabınız var mı?{" "}
+          Zaten bir hesabınız var mı? {" "}
           <Link to="/login" className="text-green-500 hover:underline">
             Giriş yap
           </Link>

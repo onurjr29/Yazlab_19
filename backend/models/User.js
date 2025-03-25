@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
     surname: { type: String, required: true }, // Adayın soyadı
     email: { type: String, required: true, unique: true }, // E-posta
     password: { type: String, required: true }, // Şifre (hashed olarak saklanmalı)
-    role: { type: String, enum: ["applicant", "admin"], default: "applicant" }, // Kullanıcı rolü
+    role: { type: String, enum: ["applicant", "admin", "manager","jury"], default: "applicant" }, // Kullanıcı rolü
     phone: { type: String, required: false }, // Telefon numarası (isteğe bağlı)
     applications: [{ type: mongoose.Schema.Types.ObjectId, ref: "Application" }] // Başvuru ID'leri
 });

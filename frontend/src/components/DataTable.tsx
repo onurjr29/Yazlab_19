@@ -138,5 +138,6 @@ export default function DataTable() {
       </tr>
     </tbody>
   </table>
-</div>  )
+</div>
+ )
 }
