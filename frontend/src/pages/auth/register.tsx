@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default function Register() {
   const [name, setName] = useState("");
-  const [surname, setSurname] = useState(""); // ✅ Soyad alanı eklendi
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [identityNumber, setIdentityNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -36,17 +36,17 @@ export default function Register() {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      await axios.post("http://localhost:5000/api/auth/register", {
         name,
-        surname,  
+        surname,
         email,
         identityNumber,
         birthDate,
-        password
+        password,
       });
 
-      alert("Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz.");
       setError("");
+      alert("Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz.");
       navigate("/auth/login");
     } catch (err: any) {
       const msg = err.response?.data?.message || "Kayıt sırasında bir hata oluştu.";
@@ -73,7 +73,7 @@ export default function Register() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r p-6">
       <div className="w-full max-w-md p-8 shadow-2xl rounded-2xl bg-white">
         <div className="flex justify-center mb-6">
-          <img src="/logo.png" alt="Kocaeli Üniversitesi" className="h-16" />
+          <img src="/images/kou-logo.png" className="h-full object-cover object-center" />
         </div>
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
           Kocaeli Üniversitesi <br /> Akademik Personel Kayıt Sistemi
@@ -129,7 +129,7 @@ export default function Register() {
 
         <p className="text-center text-sm text-gray-600 mt-5">
           Zaten bir hesabınız var mı?{" "}
-          <Link to="/login" className="text-green-500 hover:underline">
+          <Link to="/auth/login" className="text-green-500 hover:underline">
             Giriş yap
           </Link>
         </p>
