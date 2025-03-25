@@ -1,4 +1,3 @@
-// frontend/pages/Register.js
 import React, { useState } from "react";
 import { Lock, User, Mail, Eye, EyeOff, Phone } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -37,7 +36,7 @@ export default function Register() {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      await axios.post("http://localhost:5000/api/auth/register", {
         name,
         surname,
         email,
@@ -58,7 +57,7 @@ export default function Register() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r p-6">
       <div className="w-full max-w-md p-8 shadow-2xl rounded-2xl bg-white">
         <div className="flex justify-center mb-6">
-          <img src="/logo.png" alt="Kocaeli Üniversitesi" className="h-16" />
+          <img src="/images/kou-logo.png" className="h-full object-cover object-center" />
         </div>
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
           Kocaeli Üniversitesi <br /> Akademik Personel Kayıt Sistemi

@@ -35,7 +35,7 @@ interface User {
   surname: string;
   email: string;
   phone: string;
-  tcKimlikNo: string;
+  identityNumber: string;
 }
 
 interface DecodedToken {
@@ -190,99 +190,99 @@ export default function IlanDetayPage() {
 
   if (!ilan) return <div className="p-4">Yükleniyor...</div>;
 
-  return (
-    <div className="flex flex-col gap-y-4 p-6">
-      <div className="grid grid-cols-2 gap-x-6">
-        <div className="w-full bg-white rounded-[20px] flex flex-col gap-y-4 p-6 shadow-md">
-          <h1 className="text-black text-lg font-semibold">İlan Detay</h1>
-          <div className="border-2 border-solid border-black rounded-[20px] overflow-hidden h-[400px] relative flex justify-center">
-          <img src="/images/kou-logo.png" alt={ilan.baslik} className="h-full object-cover object-center" />
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <h2 className="text-lg font-semibold">{ilan.baslik}</h2>
-            <p className="text-sm">{ilan.aciklama}</p>
-            <p className="text-sm">Başlangıç: {ilan.baslangic_tarihi}</p>
-            <p className="text-sm">Bitiş: {ilan.bitis_tarihi}</p>
-            <p className="text-sm">Yönetici: {ilan.ad} {ilan.soyad}</p>
-            <p className="text-sm">Pozisyon: {ilan.pozisyon}</p>
-            <p className="text-sm">Bölüm: {ilan.bolum}</p>
-            {/* <p className="text-sm">Toplam Puan: Min {ilan.total_points.min} / Max {ilan.total_points.max ?? '-'}</p> */}
-            {/* <p className="text-sm">Kategoriler:</p>
-            <ul className="list-disc list-inside text-sm pl-4">
-              {Object.entries(ilan.selected_categories).filter(([_, val]) => val).map(([key]) => (
-                <li key={key}>{key}</li>
-              ))}
-            </ul> */}
-          </div>
+ return (
+  <div className="flex flex-col gap-y-6 p-8 bg-gray-100 min-h-screen">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* İlan Bilgisi */}
+      <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col gap-y-4">
+        <h1 className="text-2xl font-bold text-gray-800">İlan Detay</h1>
+        <div className="border rounded-xl overflow-hidden h-64 flex justify-center items-center bg-gray-50">
+          <img src="/images/kou-logo.png" alt={ilan.baslik} className="h-full object-contain" />
         </div>
-
-        <div className="w-full bg-white rounded-[20px] shadow-md">
-          <div className="flex flex-col p-6 gap-y-4">
-            <h2 className="text-black text-lg font-semibold">Başvur</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="grid">
-                <label>Ad</label>
-                <input type="text" disabled value={user?.name} className="p-2 border border-gray-300 rounded-lg" />
-              </div>
-              <div className="grid">
-                <label>Soyad</label>
-                <input type="text" disabled value={user?.surname} className="p-2 border border-gray-300 rounded-lg" />
-              </div>
-              <div className="grid">
-                <label>Email</label>
-                <input type="email" value={user?.email} onChange={(e) => setBasvuruData({ ...basvuruData, email: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
-              </div>
-              <div className="grid">
-                <label>Telefon</label>
-                <input type="text" value={user?.phone} onChange={(e) => setBasvuruData({ ...basvuruData, phone: e.target.value })} className="p-2 border border-gray-300 rounded-lg" />
-              </div>
-              <div className="grid col-span-2">
-                <label>Özgeçmiş</label>
-                <input type="file" onChange={(e) => setOzgecmis(e.target.files?.[0] || null)} />
-              </div>
-            </div>
-
-            <hr className="my-2" />
-            <h3 className="text-md font-semibold">Ek Belgeler</h3>
-            <div className="flex flex-col gap-2">
-              <div className="grid grid-cols-3 gap-4">
-                <select className="border p-2 rounded-lg" value={belgeInput.kategori} onChange={(e) => setBelgeInput({ ...belgeInput, kategori: e.target.value })}>
-                  <option value="">Kategori Seç</option>
-                  {categories.map((item) => (
-                    <option key={item._id} value={item.categoryCode}>
-                      {item.categoryCode} - {item.categoryName}
-                    </option>
-                  ))}
-                </select>
-                {/^A\.[1-8]$/.test(belgeInput.kategori) && (
-                <input
-                    type="number"
-                    placeholder="Yazar Sayısı"
-                    className="border p-2 rounded-lg"
-                    value={belgeInput.kisiSayisi}
-                    onChange={(e) => setBelgeInput({ ...belgeInput, kisiSayisi: parseInt(e.target.value) })}
-                  />
-                )}
-                <input type="file" onChange={(e) => setBelgeInput({ ...belgeInput, belge: e.target.files?.[0] || null })} />
-              </div>
-              <button onClick={handleBelgeEkle} className="w-fit mt-2 bg-blue-600 text-white px-4 py-1 rounded">+ Ekle</button>
-              <ul className="text-sm list-disc list-inside">
-                {eklenenBelgeler.map((belge, index) => (
-                  <li key={index}>{belge.kategori} - {belge.kisiSayisi} kişi - {belge.belge?.name}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="flex">
-              <button onClick={handleBasvuru} className="bg-black text-white rounded-lg p-2 shadow-md">Başvur</button>
-            </div>
-            {basvuruSuccess && <p className="text-green-600 text-sm">{basvuruSuccess}</p>}
-            {basvuruError && <p className="text-red-600 text-sm">{basvuruError}</p>}
-          </div>
+        <div className="space-y-2 text-gray-700 text-sm">
+          <p><strong>Başlık:</strong> {ilan.baslik}</p>
+          <p><strong>Açıklama:</strong> {ilan.aciklama}</p>
+          <p><strong>Başlangıç:</strong> {ilan.baslangic_tarihi}</p>
+          <p><strong>Bitiş:</strong> {ilan.bitis_tarihi}</p>
+          <p><strong>Yönetici:</strong> {ilan.ad} {ilan.soyad}</p>
+          <p><strong>Pozisyon:</strong> {ilan.pozisyon}</p>
+          <p><strong>Bölüm:</strong> {ilan.bolum}</p>
         </div>
       </div>
+
+      {/* Başvuru Formu */}
+      <div className="bg-white rounded-2xl shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">Başvuru Formu</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Ad</label>
+            <input type="text" disabled value={user?.name} className="w-full p-2 border border-gray-300 rounded-md" />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Soyad</label>
+            <input type="text" disabled value={user?.surname} className="w-full p-2 border border-gray-300 rounded-md" />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Email</label>
+            <input type="email" value={user?.email} onChange={(e) => setBasvuruData({ ...basvuruData, email: e.target.value })} className="w-full p-2 border border-gray-300 rounded-md" />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Telefon</label>
+            <input type="text" value={user?.phone} onChange={(e) => setBasvuruData({ ...basvuruData, phone: e.target.value })} className="w-full p-2 border border-gray-300 rounded-md" />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm text-gray-600 mb-1">Özgeçmiş</label>
+            <input type="file" onChange={(e) => setOzgecmis(e.target.files?.[0] || null)} className="w-full" />
+          </div>
+        </div>
+
+        <hr className="my-4" />
+
+        {/* Belgeler */}
+        <h3 className="text-lg font-semibold mb-2">Ek Belgeler</h3>
+        <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <select className="border p-2 rounded-md" value={belgeInput.kategori} onChange={(e) => setBelgeInput({ ...belgeInput, kategori: e.target.value })}>
+              <option value="">Kategori Seç</option>
+              {categories.map((item) => (
+                <option key={item._id} value={item.categoryCode}>
+                  {item.categoryCode} - {item.categoryName}
+                </option>
+              ))}
+            </select>
+            {/A\.[1-8]/.test(belgeInput.kategori) && (
+              <input type="number" placeholder="Yazar Sayısı" className="border p-2 rounded-md" value={belgeInput.kisiSayisi} onChange={(e) => setBelgeInput({ ...belgeInput, kisiSayisi: parseInt(e.target.value) })} />
+            )}
+            <input type="file" onChange={(e) => setBelgeInput({ ...belgeInput, belge: e.target.files?.[0] || null })} />
+          </div>
+          <button onClick={handleBelgeEkle} className="bg-blue-600 text-white px-4 py-2 rounded-md w-fit mt-2 hover:bg-blue-700 transition">
+            + Belge Ekle
+          </button>
+          {eklenenBelgeler.length > 0 && (
+            <ul className="list-disc list-inside text-sm text-gray-700">
+              {eklenenBelgeler.map((belge, index) => (
+                <li key={index}>
+                  {belge.kategori} - {belge.kisiSayisi} kişi - {belge.belge?.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="mt-6">
+          <button onClick={handleBasvuru} className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded-md shadow">
+            Başvur
+          </button>
+        </div>
+
+        {/* Başvuru Bildirimleri */}
+        {basvuruSuccess && <p className="text-green-600 text-sm mt-4">{basvuruSuccess}</p>}
+        {basvuruError && <p className="text-red-600 text-sm mt-4">{basvuruError}</p>}
+      </div>
     </div>
-  );
+  </div>
+);
+
 }
 function jwt_decode(token: string): DecodedToken {
   throw new Error('Function not implemented.');

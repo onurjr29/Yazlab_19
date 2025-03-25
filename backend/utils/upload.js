@@ -1,4 +1,6 @@
 // utils/upload.js
+require('dotenv').config(); // ✅ .env'yi oku
+
 const multer = require('multer');
 const { S3Client } = require('@aws-sdk/client-s3');
 const multerS3 = require('multer-s3');

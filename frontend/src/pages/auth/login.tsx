@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Lock, User } from 'lucide-react';
+ import { Lock, User } from 'lucide-react';
 import axios from 'axios';
-import { Navigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet, Link } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 
 interface DecodedToken {
@@ -18,28 +17,33 @@ interface UserType {
     role: string;
   }
  
+interface UserType {
+  token: string;
+  id: string;
+  role: string;
+  name: string;
+  surname: string;
+  email: string;
+}
+
 interface LoginProps {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 
 const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    // if (token) navigate('/');
+    if (token) navigate('/');
   }, [navigate]);
 
-//   Eksik olan login fonksiyonu eklendi
   const login = async ({ email, password }: LoginProps) => {
-    console.log({ email, password });
-    return await axios.post('http://localhost:5000/api/auth/login', {
-      email,
-      password,
-    });
+    return await axios.post('http://localhost:5000/api/auth/login', { email, password });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,13 +72,13 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r p-6">
       <div className="w-full max-w-md p-8 shadow-2xl rounded-2xl bg-white">
         <div className="flex justify-center mb-6">
-          <img src="/logo.png" alt="Kocaeli Üniversitesi" className="h-16" />
+                <img src="/images/kou-logo.png" className="h-full object-cover object-center" />
         </div>
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
           Kocaeli Üniversitesi <br /> Akademik Personel Girişi
         </h2>
+
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* E-posta */}
           <div className="relative">
             <User className="absolute left-4 top-3 text-gray-500" size={20} />
             <input
@@ -87,7 +91,6 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
             />
           </div>
 
-          {/* Şifre */}
           <div className="relative">
             <Lock className="absolute left-4 top-3 text-gray-500" size={20} />
             <input
@@ -100,14 +103,27 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
             />
           </div>
 
-          {/* Giriş Butonu */}
           <button
             type="submit"
-            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-300"
-          >
+            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-300">
             Giriş Yap
           </button>
+
+         
+
         </form>
+            <div className="mt-2 text-sm text-center text-gray-600">
+             Hesabınız yok mu?{' '}
+            <Link to="/auth/register" className="text-green-600 font-medium hover:underline">
+              Kayıt Ol
+            </Link>
+          </div>
+        {/* Başarılı giriş mesaj kutusu */}
+        {successMessage && (
+          <div className="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative text-sm text-center transition-opacity duration-300">
+            {successMessage}
+          </div>
+        )}
       </div>
     </div>
   );
