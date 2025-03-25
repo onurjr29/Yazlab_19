@@ -30,41 +30,51 @@ export default function Anasayfa() {
   }, []);
 
   const handleLogout = () => {
-    // Eğer kullanıcı bilgisi localStorage’da tutuluyorsa onu da silebilirsin
-    // localStorage.removeItem('user');
-    // Veya sadece state üzerinden çalışıyorsan başka bir şey yapmana gerek yok
-
-    navigate('/auth/login'); // login sayfasına yönlendir
-    window.location.reload(); // App içinde user null olacağı için otomatik yönlendir
+    navigate('/auth/login');
+    window.location.reload();
   };
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-black text-2xl">Akademik İlanlar</h1>
-        <button 
-          onClick={handleLogout} 
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Akademik İlanlar</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-medium transition"
         >
           Çıkış Yap
         </button>
       </div>
 
-      <div className='flex flex-col gap-y-4'>
+      <div className="grid grid-cols-1 gap-6">
         {ilanlar.map((ilan) => (
-          <Link to={`/ilan-detay/${ilan._id}`} key={ilan._id} className=''>
-            <div className='border-2 flex bg-white rounded-[20px] overflow-hidden gap-4'>
-              <div className='flex justify-center w-[300px] aspect-[1/1] items-center border border-gray-300 p-4'>
-                <img src="/images/kou-logo.png" alt={ilan.baslik} className="h-full object-cover object-center" />
-              </div>
-              <div className='flex flex-col gap-y-2 p-2'>
-                <h2 className='text-lg font-semibold'>{ilan.baslik}</h2>
-                <p className='text-black opacity-70 text-sm line-clamp-4'>{ilan.aciklama}</p>
-                <div className='flex flex-wrap gap-2'>
-                  <div className='bg-blue-500 text-white px-2 py-1 rounded-md text-xs'>Bölüm: {ilan.bolum}</div>
-                  <div className='bg-green-500 text-white px-2 py-1 rounded-md text-xs'>Pozisyon: {ilan.pozisyon}</div>
-                  <div className='bg-gray-400 text-white px-2 py-1 rounded-md text-xs'>Başlangıç: {ilan.baslangic_tarihi}</div>
-                  <div className='bg-gray-600 text-white px-2 py-1 rounded-md text-xs'>Bitiş: {ilan.bitis_tarihi}</div>
+          <Link to={`/ilan-detay/${ilan._id}`} key={ilan._id}>
+            <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+              <div className="grid grid-cols-1 md:grid-cols-3">
+                <div className="flex items-center justify-center bg-gray-50 p-4">
+                  <img
+                    src="/images/kou-logo.png"
+                    alt={ilan.baslik}
+                    className="h-32 object-contain"
+                  />
+                </div>
+                <div className="col-span-2 p-4 flex flex-col gap-3">
+                  <h2 className="text-xl font-semibold text-gray-800">{ilan.baslik}</h2>
+                  <p className="text-gray-600 text-sm line-clamp-4">{ilan.aciklama}</p>
+                  <div className="flex flex-wrap gap-2 mt-2 text-xs font-medium">
+                    <span className="bg-blue-500 text-white px-3 py-1 rounded-md">
+                      Bölüm: {ilan.bolum}
+                    </span>
+                    <span className="bg-green-500 text-white px-3 py-1 rounded-md">
+                      Pozisyon: {ilan.pozisyon}
+                    </span>
+                    <span className="bg-gray-400 text-white px-3 py-1 rounded-md">
+                      Başlangıç: {ilan.baslangic_tarihi}
+                    </span>
+                    <span className="bg-gray-600 text-white px-3 py-1 rounded-md">
+                      Bitiş: {ilan.bitis_tarihi}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
