@@ -3,24 +3,51 @@ import { Link, Outlet } from "react-router-dom";
 
 const AdminLayout = () => {
   return (
-    <div className="flex min-h-screen bg-gray-100 relative">
+    <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="w-64 flex flex-col justify-between  bg-white shadow-md p-6">
-        <div className="flex flex-col items-start gap-y-4">
-          <h2 className="text-lg font-semibold">Admin Panel</h2>
-          <Link to='/yonetim-paneli/dashboard' className="p-2 hover:underline bg-black rounded-lg text-white w-full text-sm">Dashboard</Link >
-          <Link to='/yonetim-paneli/users' className="p-2 hover:underline bg-black roundisaed-lg text-white w-full text-sm">Kullanici Yonetimi</Link >
-          <Link to='/yonetim-paneli/juri-onay' className="p-2 hover:underline bg-black rounded-lg text-white w-full text-sm">Jüri Onay</Link >
-          <Link to='/yonetim-paneli/ilan-duzenle' className="p-2 hover:underline bg-black rounded-lg text-white w-full text-sm">İlan aç / Düzenle</Link >
-
+      <aside className="w-64 min-h-screen bg-white shadow-md flex flex-col justify-between p-6">
+        <div className="space-y-6">
+          <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
+          <nav className="flex flex-col gap-2">
+            <Link
+              to="/yonetim-paneli/dashboard"
+              className="bg-gray-800 text-white rounded-md px-4 py-2 text-sm hover:bg-gray-900 transition"
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/yonetim-paneli/users"
+              className="bg-gray-800 text-white rounded-md px-4 py-2 text-sm hover:bg-gray-900 transition"
+            >
+              Kullanıcı Yönetimi
+            </Link>
+            <Link
+              to="/yonetim-paneli/juri-onay"
+              className="bg-gray-800 text-white rounded-md px-4 py-2 text-sm hover:bg-gray-900 transition"
+            >
+              Jüri Onay
+            </Link>
+            <Link
+              to="/yonetim-paneli/ilan-duzenle"
+              className="bg-gray-800 text-white rounded-md px-4 py-2 text-sm hover:bg-gray-900 transition"
+            >
+              İlan Aç / Düzenle
+            </Link>
+          </nav>
         </div>
-        <div className="">
-          <Link to="/auth/login" className="hover:underline bg-red-500 p-2 rounded-lg text-white w-full text-sm">Logout</Link>
+
+        <div>
+          <Link
+            to="/auth/login"
+            className="bg-red-500 text-white rounded-md px-4 py-2 text-sm hover:bg-red-600 transition block text-center"
+          >
+            Çıkış Yap
+          </Link>
         </div>
       </aside>
 
       {/* İçerik Alanı */}
-      <main className="w-full p-6">
+      <main className="flex-1 p-6">
         <Outlet />
       </main>
     </div>

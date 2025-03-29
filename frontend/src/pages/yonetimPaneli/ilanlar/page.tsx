@@ -23,10 +23,7 @@ export default function IlanOlustur() {
   const [selectedTitle, setSelectedTitle] = useState('');
   const [requirements, setRequirements] = useState<Requirements | null>(null);
   const [checkedCategories, setCheckedCategories] = useState<Record<string, boolean>>({});
-  const [totalPoints, setTotalPoints] = useState<{ min: number | null; max: number | null }>({
-    min: null,
-    max: null,
-  });
+  const [totalPoints, setTotalPoints] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
   const [formData, setFormData] = useState({
     ad: '',
     soyad: '',
@@ -75,8 +72,7 @@ export default function IlanOlustur() {
   }, [requirements]);
 
   const handleSubmit = async () => {
-    const confirmed = window.confirm('Bu ilanı oluşturmak istediğinize emin misiniz?');
-    if (!confirmed) return;
+    if (!window.confirm('Bu ilanı oluşturmak istediğinize emin misiniz?')) return;
 
     const ilanVerisi = {
       ...formData,
@@ -106,14 +102,14 @@ export default function IlanOlustur() {
   };
 
   return (
-    <div className="flex flex-col gap-y-4 w-full p-4">
-      <h1 className="text-xl font-semibold">İlan Oluştur</h1>
+    <div className="flex flex-col gap-y-6 w-full max-w-6xl mx-auto px-6 py-10 bg-gray-50">
+      <h1 className="text-2xl font-bold text-gray-800">İlan Oluştur</h1>
 
-      <div className="flex gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="flex flex-col gap-2">
-          <label>Bölüm</label>
+          <label className="text-sm text-gray-700 font-medium">Bölüm</label>
           <select
-            className="border p-1"
+            className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
             value={formData.bolum}
             onChange={(e) => setFormData({ ...formData, bolum: e.target.value })}
           >
@@ -125,9 +121,9 @@ export default function IlanOlustur() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label>Pozisyon</label>
+          <label className="text-sm text-gray-700 font-medium">Pozisyon</label>
           <select
-            className="border p-1"
+            className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
             value={selectedTitle}
             onChange={(e) => setSelectedTitle(e.target.value)}
           >
@@ -139,42 +135,42 @@ export default function IlanOlustur() {
         </div>
       </div>
 
-      <div className="bg-white flex flex-wrap gap-4 mt-4 p-4 border">
+      <div className="bg-white rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         {['ad', 'soyad', 'baslik', 'aciklama'].map((field) => (
-          <div key={field} className="flex flex-col gap-2 max-w-sm">
-            <label>{field}</label>
+          <div key={field} className="flex flex-col gap-2">
+            <label className="text-sm font-medium capitalize">{field}</label>
             <input
               type="text"
               value={formData[field as keyof typeof formData]}
               onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
-              className="border p-1"
+              className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         ))}
-        <div className="flex flex-col gap-2 max-w-sm">
-          <label>Başlangıç Tarihi</label>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">Başlangıç Tarihi</label>
           <input
             type="date"
             value={formData.baslangic_tarihi}
             onChange={(e) => setFormData({ ...formData, baslangic_tarihi: e.target.value })}
-            className="border p-1"
+            className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <div className="flex flex-col gap-2 max-w-sm">
-          <label>Bitiş Tarihi</label>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">Bitiş Tarihi</label>
           <input
             type="date"
             value={formData.bitis_tarihi}
             onChange={(e) => setFormData({ ...formData, bitis_tarihi: e.target.value })}
-            className="border p-1"
+            className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
       {requirements && (
-        <div className="bg-white p-6 mt-4 border">
-          <h2 className="text-lg font-semibold mb-2">Gereksinimler</h2>
-          <table className="table-auto w-full text-sm border">
+        <div className="bg-white rounded-xl shadow p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Gereksinimler</h2>
+          <table className="table-auto w-full text-sm border border-gray-300 rounded-md overflow-hidden">
             <thead>
               <tr className="bg-gray-100 text-left">
                 <th className="p-2 border">Kategori</th>
@@ -189,7 +185,7 @@ export default function IlanOlustur() {
                   <td className="p-2 border">{category}</td>
                   <td className="p-2 border">{values.min ?? '-'}</td>
                   <td className="p-2 border">{values.max ?? '-'}</td>
-                  <td className="p-2 border">
+                  <td className="p-2 border text-center">
                     <input
                       type="checkbox"
                       checked={checkedCategories[category] || false}
@@ -199,7 +195,7 @@ export default function IlanOlustur() {
                           [category]: !prev[category],
                         }))
                       }
-                      className="accent-blue-500"
+                      className="accent-blue-600 w-4 h-4"
                     />
                   </td>
                 </tr>
@@ -207,55 +203,52 @@ export default function IlanOlustur() {
             </tbody>
           </table>
 
-          <div className="mt-4 text-sm">
-            <div className="font-medium mb-2">Toplam Puan Gereksinimi:</div>
-            <div className="flex gap-4">
-              <div className="flex flex-col">
-                <label className="text-xs">Min</label>
-                <input
-                  type="number"
-                  value={totalPoints.min ?? ''}
-                  onChange={(e) =>
-                    setTotalPoints((prev) => ({
-                      ...prev,
-                      min: e.target.value ? parseInt(e.target.value) : null,
-                    }))
-                  }
-                  className="border p-1 w-24"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label className="text-xs">Max</label>
-                <input
-                  type="number"
-                  value={totalPoints.max ?? ''}
-                  onChange={(e) =>
-                    setTotalPoints((prev) => ({
-                      ...prev,
-                      max: e.target.value ? parseInt(e.target.value) : null,
-                    }))
-                  }
-                  className="border p-1 w-24"
-                />
-              </div>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Toplam Min Puan</label>
+              <input
+                type="number"
+                value={totalPoints.min ?? ''}
+                onChange={(e) =>
+                  setTotalPoints((prev) => ({
+                    ...prev,
+                    min: e.target.value ? parseInt(e.target.value) : null,
+                  }))
+                }
+                className="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Toplam Max Puan</label>
+              <input
+                type="number"
+                value={totalPoints.max ?? ''}
+                onChange={(e) =>
+                  setTotalPoints((prev) => ({
+                    ...prev,
+                    max: e.target.value ? parseInt(e.target.value) : null,
+                  }))
+                }
+                className="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-blue-500"
+              />
             </div>
           </div>
         </div>
       )}
 
-      <div className="mt-6">
+      <div className="mt-6 flex flex-col gap-2">
         <button
           onClick={handleSubmit}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 font-medium"
         >
           Onayla
         </button>
 
         {successMessage && (
-          <div className="text-green-600 mt-2">{successMessage}</div>
+          <div className="text-green-700 bg-green-100 rounded-md p-3 text-sm shadow-sm">{successMessage}</div>
         )}
         {errorMessage && (
-          <div className="text-red-600 mt-2">{errorMessage}</div>
+          <div className="text-red-700 bg-red-100 rounded-md p-3 text-sm shadow-sm">{errorMessage}</div>
         )}
       </div>
     </div>

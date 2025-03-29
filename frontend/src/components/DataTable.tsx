@@ -1,142 +1,38 @@
 export default function DataTable() {
   return (
-<div
-  className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">
-  <table className="w-full text-left table-auto min-w-max">
-    <thead>
-      <tr>
-        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-            Name
-          </p>
-        </th>
-        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-            Job
-          </p>
-        </th>
-        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-            Employed
-          </p>
-        </th>
-        <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70"></p>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            John Michael
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Manager
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            23/04/18
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <a href="#" className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-            Edit
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Alexa Liras
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Developer
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            23/04/18
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <a href="#" className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-            Edit
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Laurent Perrier
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Executive
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            19/09/17
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <a href="#" className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-            Edit
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Michael Levi
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Developer
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            24/12/08
-          </p>
-        </td>
-        <td className="p-4 border-b border-blue-gray-50">
-          <a href="#" className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-            Edit
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Richard Gran
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Manager
-          </p>
-        </td>
-        <td className="p-4">
-          <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            04/10/21
-          </p>
-        </td>
-        <td className="p-4">
-          <a href="#" className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-            Edit
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>  )
+    <div className="w-full overflow-x-auto">
+      <div className="min-w-full bg-white shadow-lg rounded-2xl overflow-hidden">
+        <table className="min-w-full table-auto text-sm text-left text-gray-700">
+          <thead className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
+            <tr>
+              <th className="px-6 py-4">Name</th>
+              <th className="px-6 py-4">Job</th>
+              <th className="px-6 py-4">Employed</th>
+              <th className="px-6 py-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {[
+              { name: "John Michael", job: "Manager", date: "23/04/18" },
+              { name: "Alexa Liras", job: "Developer", date: "23/04/18" },
+              { name: "Laurent Perrier", job: "Executive", date: "19/09/17" },
+              { name: "Michael Levi", job: "Developer", date: "24/12/08" },
+              { name: "Richard Gran", job: "Manager", date: "04/10/21" },
+            ].map((row, index) => (
+              <tr key={index} className="hover:bg-gray-50 transition">
+                <td className="px-6 py-4 font-medium">{row.name}</td>
+                <td className="px-6 py-4">{row.job}</td>
+                <td className="px-6 py-4">{row.date}</td>
+                <td className="px-6 py-4 text-center">
+                  <button className="text-white bg-blue-500 hover:bg-blue-600 transition px-3 py-1 rounded-md text-xs font-medium">
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
