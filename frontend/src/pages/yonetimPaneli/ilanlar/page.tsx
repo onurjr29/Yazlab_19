@@ -6,6 +6,7 @@ interface Ilan {
   _id: string;
   baslik: string;
   pozisyon: string;
+  pos_label: string;
   bolum: string;
   baslangic_tarihi: string;
   bitis_tarihi: string;
@@ -61,10 +62,15 @@ export default function IlanOlustur() {
           <div key={ilan._id} className="bg-white p-4 rounded shadow-md">
             <h2 className="text-lg font-semibold">{ilan.baslik}</h2>
             <p><b>Bölüm:</b> {ilan.bolum}</p>
-            <p><b>Pozisyon:</b> {ilan.pozisyon}</p>
+            <p><b>Pozisyon:</b> {ilan.pos_label}</p>
             <p><b>Tarih:</b> {ilan.baslangic_tarihi} - {ilan.bitis_tarihi}</p>
             <div className="flex gap-2 mt-2">
-              <button className="bg-yellow-500 text-white px-2 py-1 rounded">Düzenle</button>
+            <button
+                onClick={() => navigate(`/yonetim-paneli/ilanlar/duzenle/${ilan._id}`)}
+                className="bg-yellow-500 text-white px-2 py-1 rounded"
+              >
+                Düzenle
+              </button>
               <button onClick={() => handleDelete(ilan._id)} className="bg-red-500 text-white px-2 py-1 rounded">Sil</button>
             </div>
           </div>

@@ -64,7 +64,6 @@ export default function IlanDetayPage() {
     surname: '',
     email: '',
     phone: '',
-    message: '',
   });
   const [basvuruSuccess, setBasvuruSuccess] = useState('');
   const [basvuruError, setBasvuruError] = useState('');
@@ -152,34 +151,40 @@ export default function IlanDetayPage() {
     formData.append('surname', basvuruData.surname);
     formData.append('email', basvuruData.email);
     formData.append('phone', basvuruData.phone);
-    formData.append('message', basvuruData.message);
-
-    formData.append('belgeler_meta', JSON.stringify(
-      eklenenBelgeler.map(b => ({ kategori: b.kategori, kisiSayisi: b.kisiSayisi }))
-    ));
-
+  
+    formData.append(
+      'belgeler_meta',
+      JSON.stringify(eklenenBelgeler.map(b => ({ kategori: b.kategori, kisiSayisi: b.kisiSayisi })))
+    );
+  
     if (ozgecmis) {
       formData.append('ozgecmis', ozgecmis);
     }
-
-    eklenenBelgeler.forEach((b) => {
-      if (b.belge) formData.append('belgeler[]', b.belge); // <--- Burası değişti!
+  
+    eklenenBelgeler.forEach(b => {
+      if (b.belge) formData.append('belgeler[]', b.belge);
     });
-    
+  
     try {
       const response = await fetch(`http://localhost:5000/api/basvurular`, {
         method: 'POST',
         body: formData
       });
-
+  
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Başvuru başarısız');
       }
-
+  
+      const savedApp = await response.json(); // Başarıyla kaydedilen başvuru
+      // 🔥 Sistem puanlamasını başlat
+      await fetch(`http://localhost:5000/api/puanlama/${savedApp.applicationId}`, {
+        method: 'POST'
+      });
+  
       setBasvuruSuccess('Başvurunuz başarıyla gönderildi.');
       setBasvuruError('');
-      setBasvuruData({ name: '', surname: '', email: '', phone: '', message: '' });
+      setBasvuruData({ name: '', surname: '', email: '', phone: '' });
       setEklenenBelgeler([]);
       setOzgecmis(null);
     } catch (error: any) {
@@ -187,7 +192,7 @@ export default function IlanDetayPage() {
       setBasvuruSuccess('');
     }
   };
-
+  
   if (!ilan) return <div className="p-4">Yükleniyor...</div>;
 
  return (

@@ -15,7 +15,7 @@ interface Requirements {
 
 const POSITIONS = [
   { label: 'Dr. Öğretim Üyesi', value: 'drogruyesi' },
-  { label: 'Doçent', value: 'dr' },
+  { label: 'Doçent', value: 'docent' },
   { label: 'Profesör', value: 'professor' },
 ];
 
@@ -119,9 +119,9 @@ export default function IlanOlustur() {
             onChange={(e) => setFormData({ ...formData, bolum: e.target.value })}
           >
             <option value="">Seçiniz</option>
-            <option value="muhendislik">Mühendislik</option>
-            <option value="fen">Fen</option>
-            <option value="matematik">Matematik</option>
+            <option value="Mühendislik">Mühendislik</option>
+            <option value="Fen Bilimleri">Fen</option>
+            <option value="Matematik">Matematik</option>
           </select>
         </div>
 

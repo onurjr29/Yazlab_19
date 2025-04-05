@@ -13,6 +13,7 @@ import Ilanlar from './pages/yonetimPaneli/ilanlar/page'
 import { useState } from 'react'
 import JuriOnayDetay from './pages/yonetimPaneli/juriOnay/[id]'
 import IlanYeni from './pages/yonetimPaneli/ilanlar/yeni/page'
+import IlanDuzenle from './pages/yonetimPaneli/ilanlar/ilanDuzenle/page'
 
 interface UserType {
   token: string;
@@ -43,7 +44,8 @@ const App = () => {
             <Route path='juri-onay/:id' element={<JuriOnayDetay />} /><Route path='juri-onay' element={<JuriOnay/>}/>
             <Route path='ilan-duzenle' element={<Ilanlar/>}/>
             <Route path='ilanlar/yeni' element={<IlanYeni/>}/>
-            
+            <Route path="/yonetim-paneli/ilanlar/duzenle/:id" element={<IlanDuzenle />} />
+
           </Route>
         </Route>
       </Routes>

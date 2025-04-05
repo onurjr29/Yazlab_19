@@ -39,7 +39,7 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) navigate('/');
+    // if (token) navigate('/');
   }, [navigate]);
 
   const login = async ({ email, password }: LoginProps) => {
@@ -60,7 +60,7 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
       } else if (decoded.role === 'jury') {
         navigate('/yonetim-paneli/juri-onay');
       } else {
-        navigate('/');
+        // navigate('/');
       }
     } catch (error) {
       console.error(error);

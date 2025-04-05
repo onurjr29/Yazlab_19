@@ -89,8 +89,11 @@ router.post(
 
       // 🎯 Jüri havuzundan uygun bir jüri seç
 
-      res.status(201).json({ message: 'Başvuru başarıyla kaydedildi ve jüriye atandı.' });
-
+      res.status(201).json({
+        message: 'Başvuru başarıyla kaydedildi ve jüriye atandı.',
+        applicationId: yeniBasvuru._id
+      });
+      
     } catch (err) {
       console.error('Başvuru Hatası:', err);
       res.status(500).json({ error: 'Sunucu hatası', detail: err.message });

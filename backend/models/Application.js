@@ -4,7 +4,9 @@ const JuryAssignment = require('./JuryAssignment');
 const BelgeSchema = new mongoose.Schema({
   kategori: String,
   kisiSayisi: Number,
-  belgeUrl: String
+  belgeUrl: String,
+  sistemPuani: { type: Number, default: 0 }, // sistem tarafından hesaplanan puan
+  juriPuani: { type: Number, default: 0 }    // jürinin elle girdiği puan
 });
 
 const ApplicationSchema = new mongoose.Schema({
@@ -17,6 +19,7 @@ const ApplicationSchema = new mongoose.Schema({
   phone: String,
   message: String,
   belgeler: [{ belgeIsim: String, belgeIcerik: BelgeSchema }],
+  toplamSistemPuani: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now }
 });
 
