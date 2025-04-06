@@ -5,26 +5,32 @@ const { verifyIdentity } = require('../services/edevletVerify'); // ✅ e-Devlet
 
 exports.register = async (req, res) => {
   try {
-    const { identityNumber, name, surname, email, password, phone, birthDate } = req.body;
+    const { tcKimlikNo, name, surname, email, password, phone, birthDate } = req.body;
 
     // ✅ e-Devlet doğrulama
-    const isValid = await verifyIdentity({ identityNumber, name, surname, birthDate });
+    const isValid = await verifyIdentity({ tcKimlikNo, name, surname, birthDate });
     if (!isValid) {
-      return res.status(400).json({ message: 'Kimlik bilgileri doğrulanamadı. Lütfen e-Devlet bilgilerinizle eşleştiğinden emin olun.' });
-    }
+      return res.status(400).json({
+        message: 'Kimlik bilgileri doğrulanamadı.'
+      });    }
 
-    // ✅ E-posta kontrolü
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Bu e-posta adresi zaten kayıtlı' });
-    }
+ // ✅ E-posta veya TC daha önce kayıtlı mı?
+ const existingEmail = await User.findOne({ email });
+ if (existingEmail) {
+   return res.status(400).json({ message: 'Bu e-posta adresi zaten kayıtlı.' });
+      }
 
     // ✅ Şifre hash
+    const existingIdentity = await User.findOne({ tcKimlikNo });
+     if (existingIdentity) {
+       return res.status(400).json({ message: 'Bu TC Kimlik Numarası zaten kayıtlı.' });
+     }
+ 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // ✅ Kullanıcı oluştur
     const newUser = await User.create({
-      identityNumber,
+      tcKimlikNo,
       name,
       surname,
       email,
@@ -54,7 +60,7 @@ exports.register = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Kayıt sırasında hata:", error);
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: 'Sunucu hatası. Lütfen tekrar deneyiniz' });
   }
 };
 

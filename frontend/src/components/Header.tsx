@@ -16,6 +16,9 @@ const Header = () => {
               <Link to="/" className="hover:underline">Anasayfa</Link>
             </li>
             <li>
+              <Link to="/basvurularim" className="hover:underline">Başvurularım</Link>
+            </li>
+            <li>
               <Link to="/hakkimizda" className="hover:underline">Hakkımızda</Link>
             </li>
             <li>

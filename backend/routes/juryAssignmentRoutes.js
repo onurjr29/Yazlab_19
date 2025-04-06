@@ -35,9 +35,9 @@ router.get('/', async (req, res) => {
     console.log(juryId);
 
     const apps = await Application.find({ juri_id: juryId })
-      .populate("ilan_id", "baslik")
-      .select("name surname ilan_id");
-
+    .populate("ilan_id", "baslik")
+    .select("name surname ilan_id toplamJuriPuani status sonuc");
+  
     res.json(apps);
   } catch (err) {
     console.error("Jüri başvuruları alınırken hata:", err);

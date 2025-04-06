@@ -14,6 +14,9 @@ import { useState } from 'react'
 import JuriOnayDetay from './pages/yonetimPaneli/juriOnay/[id]'
 import IlanYeni from './pages/yonetimPaneli/ilanlar/yeni/page'
 import IlanDuzenle from './pages/yonetimPaneli/ilanlar/ilanDuzenle/page'
+import YoneticiOnayDetay from './pages/yonetimPaneli/YoneticiOnay/[id]'
+import YoneticiOnayListe from './pages/yonetimPaneli/YoneticiOnay/page'
+import Basvurularim from './pages/basvurularim/page'
 
 interface UserType {
   token: string;
@@ -32,6 +35,7 @@ const App = () => {
       <Route path='/auth/register' element={<Register/>}/>
       <Route element={<Layout/>}>
           <Route path='/' element={<Anasayfa/>}/>
+          <Route path='/basvurularim' element={<Basvurularim/>}/>
           <Route path='/ilan-detay/:id' element={<IlanDetayPage/>}/>
         </Route>
         {/* <Route path='/auth/register' element={<Register/>}/> */}
@@ -42,6 +46,7 @@ const App = () => {
             <Route path='dashboard' element={<Dashboard/>}/>
             <Route path='users' element={<AdminUsers/>}/>
             <Route path='juri-onay/:id' element={<JuriOnayDetay />} /><Route path='juri-onay' element={<JuriOnay/>}/>
+            <Route path='yonetici-onay/:id' element={<YoneticiOnayDetay />} /><Route path='yonetici-onay' element={<YoneticiOnayListe/>}/>
             <Route path='ilan-duzenle' element={<Ilanlar/>}/>
             <Route path='ilanlar/yeni' element={<IlanYeni/>}/>
             <Route path="/yonetim-paneli/ilanlar/duzenle/:id" element={<IlanDuzenle />} />

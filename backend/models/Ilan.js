@@ -14,6 +14,10 @@ const IlanSchema = new mongoose.Schema({
   total_points: {
     min: { type: Number, default: null },
     max: { type: Number, default: null }
+  },
+count: {
+    type: Number,
+    default: 0
   }
 }, { timestamps: true });
 

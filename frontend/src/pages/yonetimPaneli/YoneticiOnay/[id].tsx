@@ -36,11 +36,11 @@ interface Requirements {
   };
 }
 
-export default function JuriOnayDetay() {
+export default function YoneticiOnayDetay() {
   const { id } = useParams<{ id: string }>();
   const [application, setApplication] = useState<Application | null>(null);
   const [requirements, setRequirements] = useState<Requirements | null>(null);
-  const [juriPuanlari, setJuriPuanlari] = useState<Record<number, number>>({});
+  const [karar, setKarar] = useState<"olumlu" | "olumsuz">("olumlu");
 
   useEffect(() => {
     const fetchApplication = async () => {
@@ -59,7 +59,9 @@ export default function JuriOnayDetay() {
     const fetchRequirements = async () => {
       if (!application?.ilan_id) return;
       try {
-        const res = await axios.get(`http://localhost:5000/api/requirements/title/${application.ilan_id.pozisyon}?field=${application.ilan_id.bolum}`);
+        const res = await axios.get(
+          `http://localhost:5000/api/requirements/title/${application.ilan_id.pozisyon}?field=${application.ilan_id.bolum}`
+        );
         setRequirements(res.data.requirements);
       } catch (err) {
         console.error("Akademik gereksinimler alınamadı:", err);
@@ -69,42 +71,21 @@ export default function JuriOnayDetay() {
   }, [application]);
 
   const handleOnayla = async () => {
-    if (!application || !requirements) return;
-  
+    if (!application) return;
+
     try {
-      const updatedBelgeler = application.belgeler.map((belge, index) => {
-        if (belge.belgeIsim.toLowerCase() === "ozgecmis") return belge;
-        return {
-          ...belge,
-          belgeIcerik: {
-            ...belge.belgeIcerik,
-            juriPuani: juriPuanlari[index] || 0,
-          }
-        };
+      await axios.put(`http://localhost:5000/api/puanlama/${application._id}/final-karar`, {
+        status: 'onaylandı',
+        sonuc: karar
       });
-  
-      const toplamJuriPuani = updatedBelgeler.reduce((sum, belge) => {
-        if (belge.belgeIsim.toLowerCase() === "ozgecmis") return sum;
-        return sum + (belge.belgeIcerik.juriPuani || 0);
-      }, 0);
-  
-      const asgariPuan = requirements.total_points?.min ?? 0;
-      const sonuc = toplamJuriPuani >= asgariPuan ? "olumlu" : "olumsuz";
-  
-      await axios.put(`http://localhost:5000/api/puanlama/${application._id}/juri-puan`, {
-        belgeler: updatedBelgeler,
-        toplamJuriPuani,
-        status: "puanlandı",
-        sonuc
-      });
-  
-      alert(`Jüri puanları başarıyla kaydedildi.`);
+
+      alert(`Yönetici kararı başarıyla kaydedildi. Sonuç: ${karar.toUpperCase()}`);
     } catch (error) {
-      console.error("Jüri puanı kaydedilirken hata:", error);
+      console.error("Yönetici kararı kaydedilirken hata:", error);
       alert("Bir hata oluştu.");
     }
   };
-  
+
   if (!application) return <p>Yükleniyor...</p>;
 
   return (
@@ -129,14 +110,8 @@ export default function JuriOnayDetay() {
                 <p><i>Kişi Sayısı:</i> {belge.belgeIcerik.kisiSayisi}</p>
                 <p><i>Asgari Puan:</i> {asgariPuan}</p>
                 <p><i>Sistem Puanı:</i> {sistemPuani}</p>
-                <label className="block text-sm mt-2">Jüri Puanı:
-                  <input
-                    type="number"
-                    defaultValue={belge.belgeIcerik.juriPuani ?? ''}
-                    onChange={(e) => setJuriPuanlari(prev => ({ ...prev, [idx]: parseFloat(e.target.value) }))}
-                    className="border p-1 mt-1 w-24"
-                  />
-                </label>
+                <p><i>Juri Puanı:</i> {belge.belgeIcerik.juriPuani}</p>
+
                 <a href={belge.belgeIcerik.belgeUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline block mt-2">
                   Dosyayı Görüntüle
                 </a>
@@ -149,10 +124,21 @@ export default function JuriOnayDetay() {
       <div className="mt-6 border-t pt-4">
         <h2 className="text-lg font-semibold">Toplam Puan</h2>
         <p><b>Asgari Toplam:</b> {requirements?.total_points?.min ?? "-"}</p>
+        <p><b>Juri Toplam:</b> {application.toplamJuriPuani ?? 0}</p>
         <p><b>Sistem Toplam:</b> {application.toplamSistemPuani ?? 0}</p>
       </div>
 
       <div className="mt-6">
+        <label className="block mb-2 font-medium">Nihai Karar:</label>
+        <select
+          value={karar}
+          onChange={(e) => setKarar(e.target.value as "olumlu" | "olumsuz")}
+          className="border rounded p-2 mb-4 w-48"
+        >
+          <option value="olumlu">Olumlu</option>
+          <option value="olumsuz">Olumsuz</option>
+        </select>
+
         <button onClick={handleOnayla} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
           Onayla
         </button>

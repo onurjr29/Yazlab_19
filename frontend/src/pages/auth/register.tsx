@@ -14,6 +14,8 @@ export default function Register() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [birthDate, setBirthDate] = useState("");
+
 
   const navigate = useNavigate();
 
@@ -41,13 +43,17 @@ export default function Register() {
         surname,
         email,
         tcKimlikNo,
+        birthDate,
         phone,
         password
       });
+      console.log("Gönderilen doğum tarihi:", birthDate);
 
       alert("Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz.");
       navigate("/auth/login");
     } catch (err: any) {
+      console.log("Gönderilen doğum tarihi:", birthDate);
+
       const msg = err.response?.data?.message || "Kayıt sırasında bir hata oluştu.";
       setError(msg);
     }
@@ -84,6 +90,16 @@ export default function Register() {
           <div className="relative">
             <input type="text" placeholder="TC Kimlik Numarası" value={tcKimlikNo} onChange={(e) => setTcKimlikNo(e.target.value)} className="pl-4 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500" />
           </div>
+
+          <div className="relative">
+              <input
+                type="date"
+                placeholder="Doğum Tarihi"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                className="pl-4 w-full border border-gray-300 rounded-lg py-3 text-gray-800 focus:ring-2 focus:ring-green-500"
+              />
+            </div>
 
           <div className="relative">
             <Phone className="absolute left-4 top-3 text-gray-500" size={20} />

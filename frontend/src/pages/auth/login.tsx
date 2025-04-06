@@ -60,7 +60,7 @@ const Login: React.FC<{ setUser: (user: UserType) => void }> = ({ setUser }) => 
       } else if (decoded.role === 'jury') {
         navigate('/yonetim-paneli/juri-onay');
       } else {
-        // navigate('/');
+        navigate('/');
       }
     } catch (error) {
       console.error(error);

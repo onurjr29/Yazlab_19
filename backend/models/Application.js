@@ -20,6 +20,22 @@ const ApplicationSchema = new mongoose.Schema({
   message: String,
   belgeler: [{ belgeIsim: String, belgeIcerik: BelgeSchema }],
   toplamSistemPuani: { type: Number, default: 0 },
+  toplamJuriPuani: { type: Number, default: 0 },
+
+  // ✅ Başvuru genel durumu
+  status: {
+    type: String,
+    enum: ['beklemede', 'onaylandı', 'reddedildi', 'puanlandı'],
+    default: 'beklemede'
+  },
+
+  // ✅ Olumlu/olumsuz sonucu jüriden sonra tutulacak
+  sonuc: {
+    type: String,
+    enum: ['olumlu', 'olumsuz', null],
+    default: null
+  },
+
   createdAt: { type: Date, default: Date.now }
 });
 

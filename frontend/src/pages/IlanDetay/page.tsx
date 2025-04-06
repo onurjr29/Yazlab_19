@@ -8,7 +8,7 @@ interface Ilan {
   aciklama: string;
   bolum: string;
   pozisyon: string;
-  pozisyon_val: string;
+  pos_label: string;
   ad: string;
   soyad: string;
   baslangic_tarihi: string;
@@ -210,7 +210,7 @@ export default function IlanDetayPage() {
           <p><strong>Başlangıç:</strong> {ilan.baslangic_tarihi}</p>
           <p><strong>Bitiş:</strong> {ilan.bitis_tarihi}</p>
           <p><strong>Yönetici:</strong> {ilan.ad} {ilan.soyad}</p>
-          <p><strong>Pozisyon:</strong> {ilan.pozisyon}</p>
+          <p><strong>Pozisyon:</strong> {ilan.pos_label}</p>
           <p><strong>Bölüm:</strong> {ilan.bolum}</p>
         </div>
       </div>

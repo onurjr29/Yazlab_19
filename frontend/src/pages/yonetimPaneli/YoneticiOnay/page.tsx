@@ -28,7 +28,7 @@ interface JuryInfo {
   surname: string;
 }
 
-export default function JuriOnayListe() {
+export default function YoneticiOnayListe() {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<Application[]>([]);
   const [juryInfo, setJuryInfo] = useState<JuryInfo | null>(null);
@@ -64,7 +64,7 @@ export default function JuriOnayListe() {
 
   return (
     <div className="flex flex-col gap-y-4 w-full p-4">
-      <h1 className="text-xl font-semibold">Jüri Onay Listesi</h1>
+      <h1 className="text-xl font-semibold">Yonetici Onay Listesi</h1>
       <div className="w-full grid grid-cols-2 gap-4">
         {applications.map((app) => (
           <div key={app._id} className="bg-white rounded-lg p-3 shadow">
@@ -75,6 +75,14 @@ export default function JuriOnayListe() {
             <p className="text-sm">
               <b>Jüri Üyesi:</b> {juryInfo ? `${juryInfo.name} ${juryInfo.surname}` : "Yükleniyor..."}
             </p>
+            <p className="text-sm">
+              <b>Durum:</b> {app.status || "Beklemede"}
+            </p>
+            {app.sonuc && (
+              <p className="text-sm">
+                <b>Sonuç:</b> {app.sonuc === "olumlu" ? "Olumlu" : "Olumsuz"}
+              </p>
+            )}
 
             {app.toplamJuriPuani !== undefined && ( 
               <p className="text-sm">
@@ -83,7 +91,7 @@ export default function JuriOnayListe() {
             )}
             <div className="flex justify-end mt-2">
               <button
-                onClick={() => navigate(`/yonetim-paneli/juri-onay/${app._id}`)}
+                onClick={() => navigate(`/yonetim-paneli/yonetici-onay/${app._id}`)}
                 className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
               >
                 İncele

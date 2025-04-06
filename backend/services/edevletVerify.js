@@ -6,25 +6,39 @@ const SOAP_ACTION = 'http://tckimlik.nvi.gov.tr/WS/TCKimlikNoDogrula';
 
 // 🔧 Doğum yılı çıkarma fonksiyonu
 const parseBirthYear = (dateString) => {
+  if (!dateString) throw new Error("Doğum tarihi eksik");
+
+  // Tarih formatı yyyy-mm-dd şeklindeyse
+  if (dateString.includes('-')) {
+    return parseInt(dateString.split('-')[0]); // "2003-08-09" → 2003
+  }
+
+  // Eğer gelen format dd.mm.yyyy ise
   if (dateString.includes('.')) {
-    const [day, month, year] = dateString.split('.');
+    const [_, __, year] = dateString.split('.');
     return parseInt(year);
   }
 
+  // Son çare: Date objesinden çek
   return new Date(dateString).getFullYear();
 };
 
-exports.verifyIdentity = async ({ identityNumber, name, surname, birthDate }) => {
+exports.verifyIdentity = async ({ tcKimlikNo, name, surname, birthDate }) => {
   try {
     const birthYear = parseBirthYear(birthDate); // 🔁 burada düzeltme var
-
+    console.log("backende gelen bilgiler:", {
+      tcKimlikNo,
+      name,
+      surname,
+      birthYear,
+    });
     const soapRequest = `<?xml version="1.0" encoding="utf-8"?>
       <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                      xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
         <soap:Body>
           <TCKimlikNoDogrula xmlns="http://tckimlik.nvi.gov.tr/WS">
-            <TCKimlikNo>${identityNumber}</TCKimlikNo>
+            <TCKimlikNo>${tcKimlikNo}</TCKimlikNo>
             <Ad>${name.toUpperCase()}</Ad>
             <Soyad>${surname.toUpperCase()}</Soyad>
             <DogumYili>${birthYear}</DogumYili>
@@ -32,7 +46,9 @@ exports.verifyIdentity = async ({ identityNumber, name, surname, birthDate }) =>
         </soap:Body>
       </soap:Envelope>`;
 
+
     const response = await axios.post(EDEVLET_ENDPOINT, soapRequest, {
+      
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
         'SOAPAction': SOAP_ACTION,
@@ -44,6 +60,8 @@ exports.verifyIdentity = async ({ identityNumber, name, surname, birthDate }) =>
     const result = parsed['soap:Envelope']['soap:Body'][0]['TCKimlikNoDogrulaResponse'][0]['TCKimlikNoDogrulaResult'][0];
     return result === 'true';
   } catch (error) {
+    console.log("🧾 Backend'e gelen doğum tarihi:", birthDate);
+
     console.error('🛑 e-Devlet doğrulama hatası:', error.message);
     return false;
   }

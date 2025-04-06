@@ -12,11 +12,13 @@ app.use(express.json());
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/requirements', require('./routes/academicRequirementsRoutes'));	
+app.use('/api/academic-requirements-user', require('./routes/academicRequirementsUserRoutes'));
 app.use('/api/ilanlar', require('./routes/ilanlarRoutes'));
 app.use('/api/basvurular', require('./routes/basvuruRoutes'));
 app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/jury-assignments', require('./routes/juryAssignmentRoutes'));
 app.use('/api/puanlama', require('./routes/puanlamaRoutes'));
+
 
 // app.use('/api/auth', authRoutes);
 
