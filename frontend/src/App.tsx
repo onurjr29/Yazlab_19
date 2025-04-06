@@ -17,6 +17,7 @@ import IlanDuzenle from './pages/yonetimPaneli/ilanlar/ilanDuzenle/page'
 import YoneticiOnayDetay from './pages/yonetimPaneli/YoneticiOnay/[id]'
 import YoneticiOnayListe from './pages/yonetimPaneli/YoneticiOnay/page'
 import Basvurularim from './pages/basvurularim/page'
+import RoleBasedRoute from './routes/RoleBasedRoute'
 
 interface UserType {
   token: string;
@@ -40,19 +41,44 @@ const App = () => {
         </Route>
         {/* <Route path='/auth/register' element={<Register/>}/> */}
 
-        <Route path='/yonetim-paneli' element={<AdminRoute/>}>
-          <Route element={<AdminLayout/>}>
-            <Route index element={<Dashboard/>}/>
-            <Route path='dashboard' element={<Dashboard/>}/>
-            <Route path='users' element={<AdminUsers/>}/>
-            <Route path='juri-onay/:id' element={<JuriOnayDetay />} /><Route path='juri-onay' element={<JuriOnay/>}/>
-            <Route path='yonetici-onay/:id' element={<YoneticiOnayDetay />} /><Route path='yonetici-onay' element={<YoneticiOnayListe/>}/>
-            <Route path='ilan-duzenle' element={<Ilanlar/>}/>
-            <Route path='ilanlar/yeni' element={<IlanYeni/>}/>
-            <Route path="/yonetim-paneli/ilanlar/duzenle/:id" element={<IlanDuzenle />} />
+        <Route path='/yonetim-paneli' element={<RoleBasedRoute allowedRoles={["admin", "jury", "manager"]} />}>
+  <Route element={<AdminLayout />}>
+    <Route index element={<Dashboard />} />
+    <Route path='dashboard' element={<Dashboard />} />
+    <Route path='users' element={<AdminUsers />} />
 
-          </Route>
-        </Route>
+    {/* Jüri Onay Sayfası (admin + jury) */}
+    <Route path='juri-onay/:id' element={
+      <RoleBasedRoute allowedRoles={["admin", "jury"]} />
+    }>
+      <Route index element={<JuriOnayDetay />} />
+    </Route>
+    <Route path='juri-onay' element={
+      <RoleBasedRoute allowedRoles={["admin", "jury"]} />
+    }>
+      <Route index element={<JuriOnay />} />
+    </Route>
+
+    {/* Yönetici Onay Sayfası (admin + yonetici) */}
+    <Route path='yonetici-onay/:id' element={
+      <RoleBasedRoute allowedRoles={["admin", "manager"]} />
+    }>
+      <Route index element={<YoneticiOnayDetay />} />
+    </Route>
+    <Route path='yonetici-onay' element={
+      <RoleBasedRoute allowedRoles={["admin", "manager"]} />
+    }>
+      <Route index element={<YoneticiOnayListe />} />
+    </Route>
+
+    {/* Admin'e özel sayfalar */}
+    <Route element={<RoleBasedRoute allowedRoles={["admin"]} />}>
+  <Route path='ilan-duzenle' element={<Ilanlar />} />
+  <Route path='ilanlar/yeni' element={<IlanYeni />} />
+  <Route path='ilanlar/duzenle/:id' element={<IlanDuzenle />} />
+</Route>
+  </Route>
+</Route>
       </Routes>
     </Router>
   )
