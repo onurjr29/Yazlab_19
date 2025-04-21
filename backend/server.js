@@ -19,7 +19,6 @@ app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/jury-assignments', require('./routes/juryAssignmentRoutes'));
 app.use('/api/puanlama', require('./routes/puanlamaRoutes'));
 
-
 // app.use('/api/auth', authRoutes);
 
 mongoose.connect(process.env.MONGO_URI, {

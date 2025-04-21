@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 
@@ -48,6 +48,8 @@ export default function IlanDetayPage() {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [eklenenBelgeler, setEklenenBelgeler] = useState<any[]>([]);
   const [ozgecmis, setOzgecmis] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const [belgeInput, setBelgeInput] = useState<{
     kategori: string;
     kisiSayisi: number;
@@ -129,20 +131,25 @@ export default function IlanDetayPage() {
 
   const handleBelgeEkle = () => {
     if (!belgeInput.kategori || !belgeInput.belge) return;
-
+  
     const isA1ToA8 = /^A\.[1-8]$/.test(belgeInput.kategori);
-
+  
     if (isA1ToA8 && !belgeInput.kisiSayisi) {
       alert("A.1 - A.8 arası için kişi sayısı zorunludur!");
       return;
     }
-
+  
     const kisiSayisi = isA1ToA8 ? belgeInput.kisiSayisi : '1';
-
-    setEklenenBelgeler([...eklenenBelgeler, { ...belgeInput, kisiSayisi }]);
+  
+    setEklenenBelgeler(prev => [...prev, { ...belgeInput, kisiSayisi }]);
     setBelgeInput({ kategori: '', kisiSayisi: 1, belge: null });
+  
+    // 👇 file input'u sıfırla
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
-
+  
   const handleBasvuru = async () => {
     const formData = new FormData();
     formData.append('ilan_id', id || '');
@@ -258,7 +265,7 @@ export default function IlanDetayPage() {
             {/A\.[1-8]/.test(belgeInput.kategori) && (
               <input type="number" placeholder="Yazar Sayısı" className="border p-2 rounded-md" value={belgeInput.kisiSayisi} onChange={(e) => setBelgeInput({ ...belgeInput, kisiSayisi: parseInt(e.target.value) })} />
             )}
-            <input type="file" onChange={(e) => setBelgeInput({ ...belgeInput, belge: e.target.files?.[0] || null })} />
+            <input ref={fileInputRef} type="file" onChange={(e) => setBelgeInput({ ...belgeInput, belge: e.target.files?.[0] || null })} />
           </div>
           <button onClick={handleBelgeEkle} className="bg-blue-600 text-white px-4 py-2 rounded-md w-fit mt-2 hover:bg-blue-700 transition">
             + Belge Ekle

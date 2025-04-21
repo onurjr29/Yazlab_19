@@ -50,7 +50,7 @@ const App = () => {
     {/* Jüri Onay Sayfası (admin + jury) */}
     <Route path='juri-onay/:id' element={
       <RoleBasedRoute allowedRoles={["admin", "jury"]} />
-    }>
+    }> 
       <Route index element={<JuriOnayDetay />} />
     </Route>
     <Route path='juri-onay' element={
